@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import { Youtube, Instagram, Music2, Facebook, Twitter, Linkedin, Pin, Camera, Gamepad2, MessageCircle } from 'lucide-react';
 import image_1 from './image_1.jpg';
 import image_2 from './image_2.jpg';
@@ -7,7 +6,6 @@ import image_4 from './image_4.jpg';
 import user_profile from './user_profile.png';
 
 export const assets = {
-    logo,
     user_profile
 };
 
@@ -56,6 +54,8 @@ export const platformIcons = {
     twitch: <Gamepad2 color='#9146FF' className='bg-[#9146FF10] size-10 p-2 rounded' />,
     discord: <MessageCircle color='#5865F2' className='bg-[#5865F210] size-10 p-2 rounded' />,
 };
+
+
 
 export const dummyUsers = [
     {
