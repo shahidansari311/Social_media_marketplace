@@ -47,45 +47,45 @@ const Filterbox = ({ phone, setPhone, filters, setFilters }) => {
     ]
 
     const statuses = [
-        {value:"verified", label:"Verified account only"},
-        {value:"monetized", label:"Monetized account only"},
+        { value: "verified", label: "Verified account only" },
+        { value: "monetized", label: "Monetized account only" },
     ]
 
-    const niches=[
+    const niches = [
         // {value:"All",label:"All niches"},
-        {value:"lifestyle", label:"Lifestyle"},
-        {value:"fitness", label:"Fitness"},
-        {value:"food", label:"Food"},
-        {value:"travel", label:"Travel"},
-        {value:"tech", label:"Technology"},
-        {value:"gaming", label:"Gaming"},
-        {value:"fashion", label:"Fashion"},
-        {value:"beauty", label:"Beauty"},
-        {value:"business", label:"Business"},
-        {value:"education", label:"Education"},
-        {value:"enterntainment", label:"Entertainment"},
-        {value:"music", label:"Music"},
-        {value:"art", label:"Art"},
-        {value:"sports", label:"Sports"},
-        {value:"health", label:"Health"},
-        {value:"finance", label:"Finance"},
+        { value: "lifestyle", label: "Lifestyle" },
+        { value: "fitness", label: "Fitness" },
+        { value: "food", label: "Food" },
+        { value: "travel", label: "Travel" },
+        { value: "tech", label: "Technology" },
+        { value: "gaming", label: "Gaming" },
+        { value: "fashion", label: "Fashion" },
+        { value: "beauty", label: "Beauty" },
+        { value: "business", label: "Business" },
+        { value: "education", label: "Education" },
+        { value: "enterntainment", label: "Entertainment" },
+        { value: "music", label: "Music" },
+        { value: "art", label: "Art" },
+        { value: "sports", label: "Sports" },
+        { value: "health", label: "Health" },
+        { value: "finance", label: "Finance" },
     ]
 
     const currency = import.meta.env.VITE_CURRENCY || "$";
 
-    const onclearfilter=()=>{
-       if(search){
-        navigate('/marketplace');
-       } 
-       setsearch("");
-       setFilters({
-            platform:null,
+    const onclearfilter = () => {
+        if (search) {
+            navigate('/marketplace');
+        }
+        setsearch("");
+        setFilters({
+            platform: null,
             maxPrice: 100000,
-            minFollowers:0,
-            niche:null,
-            verified:false,
-            monetized:false
-       })
+            minFollowers: 0,
+            niche: null,
+            verified: false,
+            monetized: false
+        })
     }
 
     return (
@@ -109,7 +109,7 @@ const Filterbox = ({ phone, setPhone, filters, setFilters }) => {
                 <div className='flex items-center justify-between'>
                     <input type="text" placeholder='Search by username, platform , niche , etc.' className='w-full text-sm px-3 py-2 border border-gray-300 rounded-md outline-indigo-500' onChange={onsearchchange} value={search} />
                 </div>
-                
+
                 {/* Platform filter */}
                 <div>
                     <button className='flex items-center justify-between w-full mb-3' onClick={() => toggleSection("platform")}>
@@ -149,10 +149,10 @@ const Filterbox = ({ phone, setPhone, filters, setFilters }) => {
                     </button>
                     {expanded.price && (
                         <div className='space-y-3'>
-                            <input type="range" min="0" max="1000000" step="100" value={filters.maxPrice || 1000000} onChange={(e)=>onfilterchange({...filters, maxPrice:parseInt(e.target.value)})} className='w-full h-2 bg-gray-200 rounded-ls appearance-none cursor-pointer accent-indigo-600 rounded-2xl' />
+                            <input type="range" min="0" max="1000000" step="100" value={filters.maxPrice || 1000000} onChange={(e) => onfilterchange({ ...filters, maxPrice: parseInt(e.target.value) })} className='w-full h-2 bg-gray-200 rounded-ls appearance-none cursor-pointer accent-indigo-600 rounded-2xl' />
                             <div className='flex items-center justify-between text-sm text-gray-600'>
                                 <span>{currency} 0</span>
-                                <span>{currency} {(filters.maxPrice || 100000 ).toLocaleString()}</span>
+                                <span>{currency} {(filters.maxPrice || 100000).toLocaleString()}</span>
                             </div>
                         </div>
                     )}
@@ -168,8 +168,8 @@ const Filterbox = ({ phone, setPhone, filters, setFilters }) => {
                     </button>
                     {expanded.followers && (
                         <select className='w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-700 outline-indigo-500'
-                        value={filters.minFollowers?.toString() || "0"} 
-                        onChange={(e)=>onfilterchange({...filters, minFollowers : parseInt(e.target.value) || 0 })}>
+                            value={filters.minFollowers?.toString() || "0"}
+                            onChange={(e) => onfilterchange({ ...filters, minFollowers: parseInt(e.target.value) || 0 })}>
                             <option value="0">
                                 Any amount
                             </option>
@@ -187,9 +187,9 @@ const Filterbox = ({ phone, setPhone, filters, setFilters }) => {
                             </option>
                         </select>
                     )}
-                    
+
                 </div>
-                
+
                 {/* Niche */}
                 <div>
                     <button className='flex items-center justify-between w-full mb-3' onClick={() => toggleSection("niche")}>
@@ -201,17 +201,17 @@ const Filterbox = ({ phone, setPhone, filters, setFilters }) => {
 
                     {expanded.niche && (
                         <select className='w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-700 outline-indigo-500'
-                        value={filters.niche || ""}
-                        onChange={(e)=>onfilterchange({...filters,niche:e.target.value || null })}>
+                            value={filters.niche || ""}
+                            onChange={(e) => onfilterchange({ ...filters, niche: e.target.value || null })}>
                             <option>All niches</option>
-                            {niches.map((nich,index)=>(
+                            {niches.map((nich, index) => (
                                 <option key={nich.value} value={nich.value}>{nich.label}</option>
                             ))}
                         </select>
                     )}
 
                 </div>
-                
+
                 {/* Account Status */}
                 <div>
                     <button className='flex items-center justify-between w-full mb-3' onClick={() => toggleSection("status")}>
@@ -221,22 +221,28 @@ const Filterbox = ({ phone, setPhone, filters, setFilters }) => {
                         <ChevronDown className={`size-4 transition transform ${expanded.status ? "rotate-180" : ""} `} />
                     </button>
                     {expanded.status && (
-                        <div className='flex flex-col gap-2'>
-                            {statuses.map((status) => (
-                                <label key={status.value} className='flex items-center gap-2 text-gray-700 text-sm'>
-                                    <input type="checkbox" checked={filters.status ?.includes(status.value) || false} onChange={(e) => {
-                                        const checked = e.target.checked;
-                                        const current = filters.status || [];
-                                        const updated = checked ? [...current, status.value] : current.filter((p) => p !== status.value);
+                        <div className="flex flex-col gap-2">
+                            <label className="flex items-center gap-2 text-sm text-gray-700">
+                                <input
+                                    type="checkbox"
+                                    checked={filters.verified}
+                                    onChange={(e) =>
+                                        setFilters({ ...filters, verified: e.target.checked })
+                                    }
+                                />
+                                Verified account only
+                            </label>
 
-                                        onfilterchange({
-                                            ...filters,
-                                            status: updated.length > 0 ? updated : null
-                                        })
-                                    }} />
-                                    <span>{status.label}</span>
-                                </label>
-                            ))}
+                            <label className="flex items-center gap-2 text-sm text-gray-700">
+                                <input
+                                    type="checkbox"
+                                    checked={filters.monetized}
+                                    onChange={(e) =>
+                                        setFilters({ ...filters, monetized: e.target.checked })
+                                    }
+                                />
+                                Monetized account only
+                            </label>
                         </div>
                     )}
                 </div>

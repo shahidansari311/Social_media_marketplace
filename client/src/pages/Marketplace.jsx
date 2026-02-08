@@ -31,7 +31,7 @@ const Marketplace = () => {
     }
     
     if(filters.minFollowers){
-        if(listing.followers_count > filters.minFollowers) return false;
+        if(listing.followers_count < filters.minFollowers) return false;
     }
     
     if(filters.niche && filters.niche.length >0 ){
