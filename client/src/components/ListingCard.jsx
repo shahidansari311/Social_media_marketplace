@@ -74,7 +74,7 @@ const ListingCard = ({ listing }) => {
                         </span>
                     </div>
                     <button
-                    onClick={()=>{navigate('/listing/${listing.id');window.scrollTo(0,0)}} className='px-2 py-3 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition'>
+                    onClick={()=>{navigate(`/listing/${listing.id}`);window.scrollTo(0,0)}} className='px-2 py-3 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition'>
                         More Details
                     </button>
                 </div>
