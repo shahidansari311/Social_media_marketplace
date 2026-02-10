@@ -11,6 +11,7 @@ import Listingdetails from './pages/Listingdetails'
 import Messages from './pages/Messages'
 import Loading from './pages/Loading'
 import Navbar from './components/Navbar'
+import Chatbox from './components/Chatbox'
 
 const App = () => {
 
@@ -32,6 +33,7 @@ const App = () => {
         <Route path='/about-us' element={<About/>}/>
 
       </Routes>
+      <Chatbox/>
     </div>
   )
 }
