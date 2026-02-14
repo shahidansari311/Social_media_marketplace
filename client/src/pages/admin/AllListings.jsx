@@ -1,7 +1,7 @@
-import AdminTitle from '../../components/admin/AdminTitle';
+import AdminTitle from '../../components/AdminTitle';
 import { useEffect, useState } from 'react';
 import { CheckCircleIcon, Loader2Icon, MailCheckIcon, XIcon } from 'lucide-react';
-import ListingDetailsModal from '../../components/admin/ListingDetailsModal';
+import ListingDetailsModal from '../../components/ListingDetailsModal';
 import { dummyListings } from '../../assets/assets';
 
 const AllListings = () => {

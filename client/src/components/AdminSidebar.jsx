@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import { BanknoteIcon, CheckIcon, LayoutDashboardIcon, ListIcon, Settings2Icon, WalletIcon } from 'lucide-react';
-import { assets } from '../../assets/assets';
+import { assets } from '../assets/assets';
 
 const AdminSidebar = () => {
 

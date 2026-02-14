@@ -1,6 +1,6 @@
 import { Outlet, Link } from "react-router-dom";
-import AdminSidebar from "../../components/admin/AdminSidebar";
-import AdminNavbar from "../../components/admin/AdminNavbar";
+import AdminSidebar from "../../components/AdminSidebar";
+import AdminNavbar from "../../components/AdminNavbar";
 import { useState } from "react";
 import { useEffect } from "react";
 import { ArrowRightIcon, Loader2Icon } from "lucide-react";

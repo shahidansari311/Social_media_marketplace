@@ -1,8 +1,8 @@
 import { ChartLineIcon, CircleDollarSignIcon, ListIcon, Loader2Icon, UsersIcon } from 'lucide-react';
-import AdminTitle from '../../components/admin/AdminTitle';
+import AdminTitle from '../../components/AdminTitle';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import ListingDetailsModal from '../../components/admin/ListingDetailsModal';
+import ListingDetailsModal from '../../components/ListingDetailsModal';
 import { dummyListings } from '../../assets/assets';
 
 const Dashboard = () => {

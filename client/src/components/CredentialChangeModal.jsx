@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { ArrowUpRightFromSquareIcon, CopyIcon, Loader2Icon, XIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { dummyOrders, socialMediaLinks } from '../../assets/assets';
+import { dummyOrders, socialMediaLinks } from '../assets/assets';
 
 const CredentialChangeModal = ({ listing, onClose }) => {
 
