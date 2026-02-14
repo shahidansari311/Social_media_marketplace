@@ -5,6 +5,7 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
+    "postinstall": "npx prisma generate",
     "server": "nodemon server.js",
     "start": "node server.js"
   },
@@ -12,10 +13,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@clerk/express": "^1.7.70",
+    "@prisma/client": "^6.19.2",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
-    "multer": "^2.0.2"
+    "multer": "^2.0.2",
+    "prisma": "^6.19.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"
