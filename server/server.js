@@ -16,25 +16,41 @@ app.use(cors());
 app.use(express.json());
 app.use(clerkMiddleware());
 
-// const autoSyncUser = async (req, res, next) => {
-//     const { userId } = getAuth(req);
-    
-//     if (userId) {
-//         try {
-//             // Check if user exists in database
-//             const user = await prisma.user.findUnique({
-//                 where: { id: userId }
-//             });
-            
-//         } catch (error) {
-//             console.error('Auto-sync error:', error);
-//         }
-//     }
-    
-//     next();
-// };
+const autoSyncUser = async (req, res, next) => {
+    const { userId, sessionClaims } = getAuth(req);
 
-// app.use(autoSyncUser);
+    if (!userId) {
+        return next();
+    }
+
+    try {
+        const email = sessionClaims?.email || '';
+        const firstName = sessionClaims?.first_name || '';
+        const lastName = sessionClaims?.last_name || '';
+        const image = sessionClaims?.image_url || '';
+
+        await prisma.user.upsert({
+            where: { id: userId },
+            update: {
+                email,
+                name: `${firstName} ${lastName}`.trim() || 'User',
+                image,
+            },
+            create: {
+                id: userId,
+                email,
+                name: `${firstName} ${lastName}`.trim() || 'User',
+                image,
+            },
+        });
+    } catch (error) {
+        console.error('Auto-sync error:', error);
+    }
+
+    next();
+};
+
+app.use(autoSyncUser);
 
 app.get('/', (req, res) => {
     res.send('Server is live!');

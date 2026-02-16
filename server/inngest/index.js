@@ -76,7 +76,7 @@ const syncuserUpdation = inngest.createFunction(
     await prisma.user.update({
         where:{ id:data.id },
         data:{
-            email:data?.email_addressess[0]?.email_address,
+            email:data?.email_addresses[0]?.email_address,
             name:data?.first_name + " "+data?.last_name,
             image:data?.image_url,
         }
