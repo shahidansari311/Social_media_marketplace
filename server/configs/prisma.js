@@ -4,6 +4,8 @@ import { PrismaNeon } from '@prisma/adapter-neon';
 import { PrismaClient } from '@prisma/client';
 import ws from 'ws';
 
+neonConfig.fetchConnectionCache = true;
+
 // Configure WebSocket for local development
 if (process.env.NODE_ENV !== 'production') {
     neonConfig.webSocketConstructor = ws;
