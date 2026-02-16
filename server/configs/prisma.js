@@ -1,6 +1,6 @@
 import 'dotenv/config'
-import { PrismaClient } from './generated/prisma'
 import { PrismaNeon } from '@prisma/adapter-neon'
+import { PrismaClient } from '@prisma/client'; 
 // import { prisma } from './db'
 
 const adapter = new PrismaNeon({
