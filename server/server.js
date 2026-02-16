@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(clerkMiddleware());
 
 app.get('/', (req, res) => {
-    res.send('Home Page!');
+    res.send('Server is live!');
 });
 
 app.get('/my-profile', async (req, res) => {
@@ -43,7 +43,7 @@ app.get('/my-profile', async (req, res) => {
     }
 });
 
-app.use('/api/inngest', serve({ client: inngest, functions }));
+app.use('/api/inngest', serve({ client: inngest, functions ,signingKey: process.env.INNGEST_SIGNING_KEY, }));
 
 // For local development
 if (process.env.NODE_ENV !== 'production') {

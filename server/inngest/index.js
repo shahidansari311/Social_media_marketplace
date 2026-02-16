@@ -1,7 +1,8 @@
 import { Inngest } from "inngest";
 import {prisma} from "../configs/prisma.js"
 
-export const inngest = new Inngest({ id: "my-app" });
+export const inngest = new Inngest({ id: "my-app" , eventKey: process.env.INNGEST_EVENT_KEY,});
+
 
 // Your new function:
 const syncuserCreation = inngest.createFunction(
