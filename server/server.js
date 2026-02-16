@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import { clerkMiddleware, getAuth } from '@clerk/express'; // Added getAuth
+import { clerkMiddleware, getAuth } from '@clerk/express';
 import { prisma } from './configs/prisma.js';   
 import { serve } from 'inngest/express';
 import { functions, inngest } from './inngest/index.js';
@@ -10,12 +10,18 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 4000;
-app.use(clerkMiddleware())
-app.use(express.json());
+
+// Middleware order matters!
 app.use(cors());
+app.use(express.json());
+app.use(clerkMiddleware());
+
+app.get('/', (req, res) => {
+    res.send('Home Page!');
+});
 
 app.get('/my-profile', async (req, res) => {
-    const { userId } = getAuth(req); // Get the authenticated user ID from Clerk
+    const { userId } = getAuth(req);
     
     if (!userId) {
         return res.status(401).json({ error: 'Unauthorized' });
@@ -25,17 +31,26 @@ app.get('/my-profile', async (req, res) => {
         const user = await prisma.user.findUnique({
             where: { clerkId: userId },
         });
+        
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        
         res.json(user);
     } catch (error) {
+        console.error('Database error:', error);
         res.status(500).json({ error: 'Database error' });
     }
 });
-app.use('/api/inngest',serve({client : inngest ,functions}))
 
-app.get('/', (req, res) => {
-    res.send('Home Page!');
-});
+app.use('/api/inngest', serve({ client: inngest, functions }));
 
-app.listen(PORT, () => {
-    console.log(`Server running on port: ${PORT}`);
-});
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+        console.log(`Server running on port: ${PORT}`);
+    });
+}
+
+// Export for Vercel serverless
+export default app;
