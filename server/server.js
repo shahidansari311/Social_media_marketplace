@@ -16,6 +16,26 @@ app.use(cors());
 app.use(express.json());
 app.use(clerkMiddleware());
 
+const autoSyncUser = async (req, res, next) => {
+    const { userId } = getAuth(req);
+    
+    if (userId) {
+        try {
+            // Check if user exists in database
+            const user = await prisma.user.findUnique({
+                where: { id: userId }
+            });
+            
+        } catch (error) {
+            console.error('Auto-sync error:', error);
+        }
+    }
+    
+    next();
+};
+
+app.use(autoSyncUser);
+
 app.get('/', (req, res) => {
     res.send('Server is live!');
 });
@@ -44,13 +64,6 @@ app.get('/my-profile', async (req, res) => {
 });
 
 app.use('/api/inngest', serve({ client: inngest, functions ,signingKey: process.env.INNGEST_SIGNING_KEY, }));
-
-app.get('/debug-env', (req, res) => {
-    res.json({
-        hasSigningKey: !!process.env.INNGEST_SIGNING_KEY,
-        keyLength: process.env.INNGEST_SIGNING_KEY?.length || 0,
-    });
-});
 
 // For local development
 if (process.env.NODE_ENV !== 'production') {
