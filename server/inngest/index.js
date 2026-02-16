@@ -20,7 +20,7 @@ const syncuserCreation = inngest.createFunction(
         await prisma.user.update({
             where:{id:data.id},
             data:{
-                email:data?.email_addresses[0]?.email.address,
+                email:data?.email_addresses[0]?.email_address,
                 name: data?.first_name+" "+data?.last_name,
                 image: data?.image_url,
             }
@@ -30,7 +30,7 @@ const syncuserCreation = inngest.createFunction(
     await prisma.user.create({
         data:{
             id: data.id,
-            email:data?.email_addresses[0]?.email.address,
+            email:data?.email_addresses[0]?.email_address,
             name: data?.first_name+" "+data?.last_name,
             image: data?.image_url,
         }
@@ -45,12 +45,12 @@ const syncuserDeletion = inngest.createFunction(
   async ({ event}) => {
     const {data}=event;
     
-    const listings = await prisma.listings.findMany({
+    const listings = await prisma.listing.findMany({
         where:{ownerId:data.id}
     })
 
     const chats = await prisma.chat.findMany({
-        where:{OR : [{ownerId:data.id}, {chatUserId : data.id}]}
+        where:{OR : [{ownerUserId:data.id}, {chatUserId : data.id}]}
     })
 
     const transactions = await prisma.transaction.findMany({
@@ -78,7 +78,7 @@ const syncuserUpdation = inngest.createFunction(
         data:{
             email:data?.email_addressess[0]?.email_address,
             name:data?.first_name + " "+data?.last_name,
-            image:data?.image,
+            image:data?.image_url,
         }
     })
   },

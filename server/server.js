@@ -16,25 +16,25 @@ app.use(cors());
 app.use(express.json());
 app.use(clerkMiddleware());
 
-const autoSyncUser = async (req, res, next) => {
-    const { userId } = getAuth(req);
+// const autoSyncUser = async (req, res, next) => {
+//     const { userId } = getAuth(req);
     
-    if (userId) {
-        try {
-            // Check if user exists in database
-            const user = await prisma.user.findUnique({
-                where: { id: userId }
-            });
+//     if (userId) {
+//         try {
+//             // Check if user exists in database
+//             const user = await prisma.user.findUnique({
+//                 where: { id: userId }
+//             });
             
-        } catch (error) {
-            console.error('Auto-sync error:', error);
-        }
-    }
+//         } catch (error) {
+//             console.error('Auto-sync error:', error);
+//         }
+//     }
     
-    next();
-};
+//     next();
+// };
 
-app.use(autoSyncUser);
+// app.use(autoSyncUser);
 
 app.get('/', (req, res) => {
     res.send('Server is live!');
@@ -49,7 +49,7 @@ app.get('/my-profile', async (req, res) => {
     
     try {
         const user = await prisma.user.findUnique({
-            where: { clerkId: userId },
+            where: { id: userId },
         });
         
         if (!user) {
