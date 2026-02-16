@@ -45,6 +45,13 @@ app.get('/my-profile', async (req, res) => {
 
 app.use('/api/inngest', serve({ client: inngest, functions ,signingKey: process.env.INNGEST_SIGNING_KEY, }));
 
+app.get('/debug-env', (req, res) => {
+    res.json({
+        hasSigningKey: !!process.env.INNGEST_SIGNING_KEY,
+        keyLength: process.env.INNGEST_SIGNING_KEY?.length || 0,
+    });
+});
+
 // For local development
 if (process.env.NODE_ENV !== 'production') {
     app.listen(PORT, () => {
