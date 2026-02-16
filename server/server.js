@@ -1,10 +1,10 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import { clerkMiddleware,getAuth } from '@clerk/express'
+import { clerkMiddleware, getAuth } from '@clerk/express'; // Added getAuth
 import { prisma } from './configs/prisma.js';   
-import {serve} from 'inngest/express'
-import { Inngest,functions, inngest} from './inngest/index.js';
+import { serve } from 'inngest/express';
+import { functions, inngest } from './inngest/index.js';
 
 dotenv.config();
 
