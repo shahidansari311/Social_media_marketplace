@@ -5,6 +5,8 @@ import { clerkMiddleware, getAuth } from '@clerk/express';
 import { prisma } from './configs/prisma.js';   
 import { serve } from 'inngest/express';
 import { functions, inngest } from './inngest/index.js';
+import listingRouter from './routes/listingroute.js';
+import chatRouter from './routes/chatroute.js';
 
 dotenv.config();
 
@@ -55,6 +57,9 @@ app.use(autoSyncUser);
 app.get('/', (req, res) => {
     res.send('Server is live!');
 });
+
+app.use("/api/listing",listingRouter)
+app.use("/api/chat",chatRouter);
 
 app.get('/my-profile', async (req, res) => {
     const { userId } = getAuth(req);
