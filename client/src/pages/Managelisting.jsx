@@ -1,14 +1,21 @@
+import { useAuth } from '@clerk/clerk-react';
 import { Loader2Icon, Upload } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom'
+import api from '../config/axios';
+import { getAllPublicListing, getAllUserListing } from '../app/features/listingSlice';
 
 const Managelisting = () => {
 
   const { id } = useParams();
   const navigate = useNavigate();
   const { userlistings = [] } = useSelector((state) => state.listing);
+  
+  const {getToken}=useAuth();
+  const dispatch=useDispatch();
+
 
   const [loadingListing, setLoadingListing] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -71,6 +78,47 @@ const Managelisting = () => {
 
   const handleformSubmit = async (e) => {
     e.preventDefault();
+    toast.loading("Saving...");
+    const datacopy=structuredClone(formData);
+    try {
+      if(isEditing){
+        datacopy.images=formData.images.filter((image)=> typeof image==='string');
+
+        const fromDataInstance=new FormData()
+        fromDataInstance.append('accountDetails',JSON.stringify(datacopy));
+
+        formData.images.filter((image)=>typeof image!== 'string').forEach((image)=>{fromDataInstance.append('images',image)});
+
+        const token=await getToken();
+
+        const {data}=await api.put('/api/listing',fromDataInstance,{headers:{Authorization : `Bearer ${token}`}})
+        toast.dismissAll();
+        toast.success(data.message)
+        dispatch(getAllUserListing({getToken}))
+        dispatch(getAllPublicListing())
+        navigate('/my-listings')
+      }
+      else{
+        delete datacopy.images;
+        const formDataInstance= new FormData();
+        formDataInstance.append('accountDetails',JSON.stringify(datacopy));
+        formData.images.forEach((image)=>{
+          formDataInstance.append('images',image)
+        })
+        const token= await getToken();
+        const {data} = await api.post('/api/listing',formDataInstance,{headers:{Authorization:`Bearer ${token}`}})
+        toast.dismissAll();
+        toast.success(data.message)
+        dispatch(getAllUserListing({getToken}))
+        dispatch(getAllPublicListing())
+        navigate('/my-listings')
+    }
+    } catch (error) {
+      toast.dismissAll();
+      toast.error(error.message)
+      // console.log(error);
+    }
+
   };
 
   if (loadingListing) {

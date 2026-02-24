@@ -1,6 +1,6 @@
-import { protect } from "../middlewares/authMiddleware";
-import { prisma } from "../configs/prisma";
-import imagekit from "../configs/imagekit";
+import { protect } from "../middlewares/authMiddleware.js";
+import { prisma } from "../configs/prisma.js";
+import imagekit from "../configs/imagekit.js";
 import fs from 'fs'
 
 export const addListings=async (req,res)=>{
@@ -23,15 +23,15 @@ export const addListings=async (req,res)=>{
         accountDetails.engagement_rate=parseFloat(accountDetails.engagement_rate);
         accountDetails.monthly_views=parseFloat(accountDetails.monthly_views);
         accountDetails.price=parseFloat(accountDetails.price);
-        accountDetails.platform=accountDetails.platform.tolowerCase();
-        accountDetails.niche=accountDetails.niche.tolowerCase();
+        accountDetails.platform=accountDetails.platform.toLowerCase();
+        accountDetails.niche=accountDetails.niche.toLowerCase();
 
         accountDetails.username.startsWith('@') ? accountDetails.username= accountDetails.username.slice(1) : null ;
 
         const uploadImages = req.files.map(async (file)=>{
             const response = await imagekit.files.upload({
                 file: fs.createReadStream(file.path),
-                fileName: `${Date.now}.png`,
+                fileName: `${Date.now()}.png`,
                 folder :"socialBazar",
                 transformation: {pre: "w-1280 , h-auto"}
             });
@@ -75,7 +75,7 @@ export const getAllpubliclisting= async (req,res)=>{
             return res.json({listing:[]});
         }
 
-        return res.json({listing});
+        return res.json(listing);
 
     } catch (error) {
        console.log(error);
@@ -127,7 +127,7 @@ export const updateListing=async(req,res)=>{
         const {userId}=await req.auth();
         const accountDetails=JSON.parse(req.body.accountDetails);
 
-        if(req.file.length + accountDetails.images.length > 5){
+        if(req.files.length + accountDetails.images.length > 5){
             return res.status(400).json({message:"YOu can only upload 5 images"});
         }
 
@@ -153,7 +153,7 @@ export const updateListing=async(req,res)=>{
             return res.status(404).json({message:"You can't update sold listing"})
         }
 
-        if(req.file.length > 0){
+        if(req.files.length > 0){
             const uploadImages = req.files.map(async (file)=>{
             const response = await imagekit.files.upload({
                 file: fs.createReadStream(file.path),
@@ -198,7 +198,7 @@ export const toggleStatus=async (req,res)=>{
             })
         }
 
-        if(listing.status==='active' || listing.status=='unactive'){
+        if(listing.status==='active' || listing.status=='inactive'){
              await prisma.listing.update({
                 where:{id,ownerId:userId},
                 data:{status:listing.status ==='active' ? 'inactive':'active'}
@@ -210,7 +210,7 @@ export const toggleStatus=async (req,res)=>{
         }
 
 
-        return res.json({message:"listing status updated successfully ",listing})
+        return res.json({message:"listing status updated successfully ",listing:updated})
 
     } catch (error) {
         console.log(error);
@@ -333,7 +333,7 @@ export const markedFeatured=async(req,res)=>{
 
 export const getAllUserOrders =async (req,res)=>{
     try {
-       const {userId}=req.auth();
+       const {userId}=await req.auth();
        let orders=await prisma.transaction.findMany({
         where:{userId, isPaid:true},
         include:{listing:true}

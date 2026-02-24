@@ -17,7 +17,8 @@ const Marketplace = () => {
     monetized:false,
   });
   const navigate =useNavigate();
-  const {listings}=useSelector(state=> state.listing)
+  // const {listings}=useSelector(state=> state.listing) || [];
+  const listings = useSelector(state => state.listing?.listings) ?? [];
   const [searchParams]=useSearchParams();
   const search=searchParams.get("search");
   const filterlisting=listings.filter((listing)=>{
