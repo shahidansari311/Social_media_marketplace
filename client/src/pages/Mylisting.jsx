@@ -1,11 +1,14 @@
 import { ArrowDownCircleIcon, Ban, BanIcon, CheckCircle, Clock, CoinsIcon, DollarSign, Edit, Eye, EyeIcon, EyeOffIcon, LockIcon, PlusIcon, StarIcon, Trash, TrashIcon, TrendingUp, Users, WalletIcon, XCircle } from 'lucide-react';
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 import StatsCard from '../components/StatsCard';
 import { platformIcons } from '../assets/assets';
 import Credentialsubmission from '../components/Credentialsubmission';
 import WithdrawlModal from '../components/WithdrawlModal';
+import toast from 'react-hot-toast';
+import api from '../config/axios'
+import { getAllUserListing,getAllPublicListing } from '../app/features/listingSlice';
 
 
 const Mylisting = () => {
@@ -13,6 +16,9 @@ const Mylisting = () => {
   const {userlistings  = [],balance}=useSelector((state)=>state.listing);
   const currency=import.meta.env.VITE_CURRENCY || '$';
   const navigate=useNavigate();
+  const {getToken} =useAuth();
+  const dipatch=useDispatch();
+
   const [showcredential,setShowcredential] =useState(null);
   const [showWithdrawl,setShowWithdrawl] =useState(null);
 
@@ -58,15 +64,56 @@ const Mylisting = () => {
   }
 
   const toggleStatus=async (listingId)=>{
+      try {
+        toast.loading('Updating listing status...');
+        const token=await getToken();
+        const {data}=await api.put(`/api/listing/${listingId}/status`,{},{headers:{Authorization:`Bearer ${token}`}});
+        dipatch(getAllUserListing({getToken}))
+        dipatch(getAllPublicListing())
 
+        toast.dismissAll();
+        toast.success(data.message);
+
+      } catch (error) {
+        toast.dismissAll();
+        toast.error(error?.response?.data?.message);
+      }
   }
   
   const deleteListing=async (listingId)=>{
+    try {
+      const confirm=window.confirm('Are you sure you want to delet this listing ? if credentials are changed , new credentials will be sent to your email');
+      if(!confirm) return;
+        toast.loading('Deleting listing status...');
+        const token=await getToken();
+        const {data}=await api.delete(`/api/listing/${listingId}`,{headers:{Authorization:`Bearer ${token}`}});
+        dipatch(getAllUserListing({getToken}))
+        dipatch(getAllPublicListing())
 
+        toast.dismissAll();
+        toast.success(data.message);
+
+      } catch (error) {
+        toast.dismissAll();
+        toast.error(error?.response?.data?.message);
+      }
   }
   
   const markedasFeatured=async (listingId)=>{
+    try {
+        toast.loading('Featurig listing ...');
+        const token=await getToken();
+        const {data}=await api.put(`/api/listing/featured/${listingId}/`,{},{headers:{Authorization:`Bearer ${token}`}});
+        dipatch(getAllUserListing({getToken}))
+        dipatch(getAllPublicListing())
 
+        toast.dismissAll();
+        toast.success(data.message);
+
+      } catch (error) {
+        toast.dismissAll();
+        toast.error(error?.response?.data?.message);
+      }
   }
 
   return (

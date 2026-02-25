@@ -3,8 +3,15 @@ import {dummyOrders, platformIcons} from '../assets/assets'
 import { CheckCircle2, ChevronDown, ChevronUp, Copy, DollarSign, Loader2Icon } from 'lucide-react';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
+import { useAuth, useUser } from '@clerk/clerk-react';
+import api from '../config/axios';
 
 const Myorders = () => {
+
+  const {user,isLoaded}=useUser();
+  const {getToken}=useAuth();
+
+
 
   const currency=import.meta.env.VITE_CURRENCY || '$';
   const [orders,setOrders] = useState([]);
@@ -12,13 +19,25 @@ const Myorders = () => {
   const [expandedId,setexpandedId] =useState(null);
 
   const fetchOders=async()=>{
-    setOrders(dummyOrders);
-    setloading(false);
+    
+    try {
+      setloading(true);
+      const token=await getToken();
+      const {data}=await api.get('/api/listing/user-orders',{headers:{Authorization:`Bearer ${token}`}})
+      setOrders(data.orders)
+    } catch (error) {
+      toast.error(error?.reponse?.data?.message || error?.message);
+    }finally{
+      setloading(false);
+    }
+
   }
 
   useEffect(()=>{
-    fetchOders();
-  },[])
+    if(user && isLoaded){
+      fetchOders();
+    }
+  },[isLoaded,user])
 
   const mask =(val,type)=>{
     if(!val && val !==0 ) return "-";

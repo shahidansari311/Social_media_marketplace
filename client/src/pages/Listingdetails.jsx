@@ -5,8 +5,11 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { ArrowLeftIcon, ArrowUpRightFromSquareIcon, Calendar, CheckCircle2, ChevronLeft, ChevronLeftIcon, ChevronRightIcon, DollarSign, EyeIcon, LineChart, Loader2Icon, MapPin, MessageSquareMoreIcon, ShoppingBagIcon, Users } from 'lucide-react';
 import { setChat } from '../app/features/chatSlice';
+import { useUser } from '@clerk/clerk-react';
+import toast from 'react-hot-toast';
 
 const Listingdetails = () => {
+  const {user,isLoaded}=useUser();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -37,6 +40,8 @@ const Listingdetails = () => {
   }
 
   const chatnow = () => {
+    if(!user || !isLoaded) return toast("PLease login to chat with user");
+    if(user.id === listing.ownerId) return toast("You can't chat with your own listing");
     dispatch(setChat({ listing: listing }));
   }
 
