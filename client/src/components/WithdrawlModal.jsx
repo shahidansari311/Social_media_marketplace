@@ -35,7 +35,13 @@ const WithdrawlModal = ({onClose}) => {
             }
 
             const confirm=window.confirm("Are you sure you want to submit ? ");
-            const {data}=await api.post('/api/listing/withdraw',{account,amount:parseInt(amount)},{headers:{Authorization:`Bearer ${token}`}});
+            const token = await getToken();
+            const {data}=await api.post(
+                '/api/listing/withdraw',
+                {account,amount:parseInt(amount)},
+                {headers:{Authorization:`Bearer ${token}`}}
+            );
+            toast.success(data.message);
             dispatch(getAllUserListing({getToken}))
             // dispatch(getAllPublicListing())
             onClose();

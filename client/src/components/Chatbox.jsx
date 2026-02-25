@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { dummyChats } from '../assets/assets';
 import { Loader2Icon, Send, X } from 'lucide-react';
 import { clearChat } from '../app/features/chatSlice';
 import { format } from "date-fns"
@@ -13,25 +12,29 @@ const Chatbox = () => {
     const {getToken} =useAuth();
     const { listing, isOpen, chatId } = useSelector((state) => state.chat);
     const dispatch=useDispatch();
-    const {user}=useUser();
+    const { user } = useUser();
     
-    const [chat, setChat] = useState([]);
-    const [messages, setMessages] = useState("");
+    const [chat, setChat] = useState(null);
+    const [messages, setMessages] = useState([]);
     const [newmessage, setNewMessage] = useState("");
     const [isloading, setisloading] = useState(true);
     const [isSending, setisSending] = useState(false);
 
     const fetchChat = async () => {
         try {
-            const token=await getToken();
-            const {data} =await api.post('/api/chat',{listingId:listing.id , chatId},{headers:{Authorization:`Bearer ${token}`}});
+            const token = await getToken();
+            const { data } = await api.post(
+                '/api/chat',
+                { listingId: listing.id, chatId },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
             setChat(data?.chat);
             setMessages(data?.chat?.messages || []);
             setisloading(false);
-
         } catch (error) {
-            toast.error(error?.reponse?.data?.message || error?.message);
+            toast.error(error?.response?.data?.message || error?.message);
             console.log(error);
+            setisloading(false);
         }
     }
 
@@ -44,12 +47,12 @@ const Chatbox = () => {
             },3000)
             return ()=>clearInterval(interval)
         }
-    }, [listing])
+    }, [listing, chatId])
 
     useEffect(() => {
         if (!isOpen) {
             setChat(null);
-            setMessages("");
+            setMessages([]);
             setisloading(true);
             setNewMessage("");
             setisSending(false);
@@ -58,7 +61,7 @@ const Chatbox = () => {
     
     const messagesEndref=useRef(null);
     useEffect(()=>{
-        messagesEndref.current?.scrollIntoView({behaviour:"smooth"})
+        messagesEndref.current?.scrollIntoView({behavior:"smooth"})
     },[messages.length])
 
     const handlesubmit= async (e)=>{
@@ -68,13 +71,17 @@ const Chatbox = () => {
         }
         try {
             setisSending(true);
-            const token=await getToken();
-            const {data}=await api.post('/api/chat/send-message',{chatId:chat.id,message :newmessage},{headers:{Authorization:`Bearer ${token}`}})
-            setMessages([...messages,data.newmessage]);
-            setNewMessage([])
+            const token = await getToken();
+            await api.post(
+                '/api/chat/send-message',
+                { chatId: chat.id, message: newmessage },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            await fetchChat();
+            setNewMessage("");
             setisSending(false);
         } catch (error) {
-            toast.error(error?.reposne?.data?.message || error?.message);
+            toast.error(error?.response?.data?.message || error?.message);
             console.log(error.message);
             setisSending(false);
         }
@@ -85,7 +92,7 @@ const Chatbox = () => {
     }
 
     return (
-        <div className='fixed inset-0 bg-black/70 backdrop-blur bg-opacity-50 z-100 flex items-center justify-center sm:p-4 '>
+        <div className='fixed inset-0 bg-black/70 backdrop-blur bg-opacity-50 z-[100] flex items-center justify-center sm:p-4 '>
             <div className='bg-white sm:rounded-xl shadow-2xl w-full max-w-2xl h-screen sm:h-[600px] flex flex-col'>
                 
                 {/* Header */}
@@ -102,12 +109,12 @@ const Chatbox = () => {
                 {/* Messages Area */}
                 <div className='flex-1 overflow-y-auto p-4 space-y-4 bg-gray-100'>
                    {isloading ? (
-                    <div className='flex items-center justify-between h-full'>
+                    <div className='flex items-center justify-center h-full'>
                         <Loader2Icon className='size-6 animate-spin text-indigo-600'/>
                     </div>
                    ):
                    messages.length === 0 ? (
-                    <div className='flex items-center justify-between h-full'>
+                    <div className='flex items-center justify-center h-full'>
                         <div className='text-center'>
                             <p className='text-gray-500 mb-2'>No messages yet</p>
                             <p className='text-sm text-gray-400'>Start the conversation !</p>
@@ -134,7 +141,8 @@ const Chatbox = () => {
                     className='p-4 bg-white border-t border-gray-200 rounded-b-lg'>
                         <div className='flex items-end space-x-2'>
 
-                            <textarea value={newmessage}
+                            <textarea
+                            value={newmessage}
                             onChange={(e)=>setNewMessage(e.target.value)}
                             onKeyDown={(e)=>{
                                 if(e.key==="Enter" && !e.shiftKey){
@@ -142,7 +150,10 @@ const Chatbox = () => {
                                     handlesubmit(e);
                                 }
                             }} 
-                            placeholder='Type your message...' className='flex-1 reszie-none border border-gray-300 rounded-lg px-4 py-2 focus:outline-indigo-500 max-h-32 resize-none' rows={1}/>
+                            placeholder='Type your message...'
+                            className='flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-indigo-500 max-h-32 resize-none'
+                            rows={1}
+                            />
                             <button disabled={!newmessage.trim() || isSending} type="submit" className='bg-indigo-600 hover:bg-indigo-700 text-white p-2.5 rounded-lg disabled:opacity-50 transition-colors'>
                                 {isSending ? <Loader2Icon className='w-5 h-5 animate-spin' /> : <Send className='w-5 h-5'/> }
                             </button>

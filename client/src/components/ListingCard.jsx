@@ -1,6 +1,6 @@
 import React from 'react'
 import { platformIcons } from '../assets/assets'
-import { BadgeCheck, LineChart, MapPin, User } from 'lucide-react'
+import { BadgeCheck, LineChart, MapPin, User, ArrowRight } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 const ListingCard = ({ listing }) => {
@@ -9,73 +9,86 @@ const ListingCard = ({ listing }) => {
     const currency = import.meta.env.VITE_CURRENCY || '$'
 
     return (
-        <div className='relative bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition'>
+        <div className='group relative bg-white rounded-[2rem] border border-gray-100 overflow-hidden card-hover'>
             {/* Featured Banner */}
             {listing.featured && (
-                <>
-                    <p className='py-1' />
-                    <div className='absolute top-0 left-0 w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white text-center text-xs font-semibold py-1 tracking-wide uppercase'>
-                        Featured
-                    </div>
-                </>
+                <div className='absolute top-0 left-0 w-full premium-gradient text-white text-[10px] text-center font-bold py-1.5 tracking-[0.2em] uppercase z-10'>
+                    Featured Account
+                </div>
             )}
 
-            <div className='p-5 pt-8'>
+            <div className={`p-6 ${listing.featured ? 'pt-10' : 'pt-6'}`}>
                 {/* Header*/}
-                <div className='flex items-center gap-3 mb-3'>
-                   { platformIcons[listing.platform]}
+                <div className='flex items-start gap-4 mb-6'>
+                   <div className='p-3 bg-brand-50 rounded-2xl group-hover:scale-110 transition duration-500'>
+                        { platformIcons[listing.platform]}
+                   </div>
 
-                   <div className="flex flex-col gap-0.5">
-                        <h2>{listing.title}</h2>
-                        <p>@{listing.username} -
-                            <span className='capitalize'> {listing.platform}</span> </p>
+                   <div className="flex flex-col flex-1 min-w-0">
+                        <div className='flex items-center gap-1.5'>
+                            <h2 className='text-lg font-bold text-gray-900 truncate'>{listing.title}</h2>
+                            {listing.verified && <BadgeCheck className='text-brand-500 w-4 h-4 shrink-0'/>}
+                        </div>
+                        <p className='text-sm text-gray-500 font-medium truncate'>
+                            @{listing.username} <span className='mx-1 opcity-50'>•</span> 
+                            <span className='capitalize italic'> {listing.platform}</span> 
+                        </p>
                     </div> 
-                    {listing.verified && <BadgeCheck className='text-green-500 ml-auto w-5 h-5'/>}
                 </div>
-                {/* Stats */}
-                <div className='flex felx-wrap justify-between max-w-lg items-center gap-3 my-5'>
-                    <div className='flex items-center text-sm text-gray-600'>
-                        <User className='size-6 mr-1 text-gray-400'/>
-                        <span className='text-lg font-medium text-slate-800 mr-1.5'>{listing.followers_count.toLocaleString()}</span> followers
+
+                {/* Metrics Grid */}
+                <div className='grid grid-cols-2 gap-4 mb-6'>
+                    <div className='bg-gray-50/50 rounded-2xl p-3 border border-gray-100/50 hover:bg-brand-50/30 transition shadow-sm'>
+                        <div className='flex items-center gap-2 mb-1'>
+                            <User className='size-3.5 text-brand-400'/>
+                            <span className='text-[10px] font-bold text-gray-400 uppercase tracking-widest'>Followers</span>
+                        </div>
+                        <p className='text-xl font-black text-gray-900 leading-none'>
+                            {listing.followers_count >= 1000000 ? (listing.followers_count / 1000000).toFixed(1) + 'M' : listing.followers_count.toLocaleString()}
+                        </p>
                     </div>
-                    {
-                        listing.engagement_rate && (
-                            <div className='flex items-centertext-sm text-gray-600'>
-                                <LineChart className='size-6 mr-1 text-gray-400'/>
-                                <span className='text-lg font-medium text-dlate-800 mr-1.5'>
-                                    {listing.engagement_rate}
-                                </span> % engagement
+                    {listing.engagement_rate && (
+                        <div className='bg-gray-50/50 rounded-2xl p-3 border border-gray-100/50 hover:bg-indigo-50/30 transition shadow-sm'>
+                            <div className='flex items-center gap-2 mb-1'>
+                                <LineChart className='size-3.5 text-indigo-400'/>
+                                <span className='text-[10px] font-bold text-gray-400 uppercase tracking-widest'>Engagement</span>
                             </div>
-                        )
-                    }
-                </div>
-                {/* tags and location*/}
-                <div className='flex items-center gap-3 mb-3'>
-                    <span className='text-xs font-medium bg-pink-100 text-pink-600 px-3 py-1 rounded-full capitalize'>{listing.niche}</span>
-                    {listing.country && (
-                        <div className='flexitems-center text-gray-500 text-sm '>
-                            <MapPin className='size-6 mr-1 text-gray-400'/>
-                            {listing.country}
+                            <p className='text-xl font-black text-gray-900 leading-none'>
+                                {listing.engagement_rate}%
+                            </p>
                         </div>
                     )}
                 </div>
-                {/* Description */}
-                <p className='text-sm text-gray-600 mb-4 line-clamp-2'>
+
+                {/* Meta details */}
+                <div className='flex flex-wrap items-center gap-2 mb-5'>
+                    <span className='text-[10px] font-bold bg-brand-50 text-brand-600 px-3 py-1 rounded-full uppercase tracking-wider border border-brand-100'>
+                        {listing.niche}
+                    </span>
+                    {listing.country && (
+                        <div className='flex items-center gap-1 px-3 py-1 rounded-full bg-slate-50 border border-slate-100'>
+                            <MapPin className='size-3 text-slate-400'/>
+                            <span className='text-[10px] font-bold text-slate-500 uppercase tracking-wider'>{listing.country}</span>
+                        </div>
+                    )}
+                </div>
+
+                <p className='text-sm text-gray-500 mb-6 line-clamp-2 font-medium leading-relaxed'>
                     {listing.description}
                 </p>
-                <hr className='my-5 border-gray-200'/>
 
-                {/*Footer*/}
-                <div className='flex items-center justify-between'>
-                    <div className='flex items-baseline'>
-                        <span className='text-2xl font-medium text-slate-800'>
-                            {currency}
-                            {listing.price.toLocaleString()}
+                <div className='flex items-center justify-between pt-5 border-t border-gray-50'>
+                    <div className='flex flex-col'>
+                        <span className='text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5'>Price</span>
+                        <span className='text-2xl font-black premium-text-gradient'>
+                            {currency}{listing.price.toLocaleString()}
                         </span>
                     </div>
                     <button
-                    onClick={()=>{navigate(`/listing/${listing.id}`);window.scrollTo(0,0)}} className='px-2 py-3 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition'>
-                        More Details
+                        onClick={()=>{navigate(`/listing/${listing.id}`);window.scrollTo(0,0)}} 
+                        className='h-12 w-12 bg-gray-900 text-white rounded-2xl flex items-center justify-center hover:bg-brand-600 hover:scale-110 active:scale-95 transition-all shadow-lg hover:shadow-brand-500/20 group/btn'
+                    >
+                        <ArrowRight className='size-5 group-hover/btn:translate-x-1 transition-transform'/>
                     </button>
                 </div>
             </div>

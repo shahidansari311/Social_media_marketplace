@@ -9,7 +9,7 @@ export const getAllPublicListing =createAsyncThunk("listing/getAllPublicListing"
         return data;
     } catch (error) {
         console.log(error);
-        return [];
+        return { listings: [] };
     }
 })
 
@@ -23,7 +23,14 @@ export const getAllUserListing =createAsyncThunk("listing/getAllUserListing",asy
         
     } catch (error) {
         console.log(error);
-        return [];
+        return {
+            listings: [],
+            balance: {
+                earned: 0,
+                withdrawn: 0,
+                available: 0
+            }
+        };
     }
 })
 

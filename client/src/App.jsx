@@ -32,15 +32,15 @@ const App = () => {
   const {user,isLoaded}=useUser();
 
   const dispatch=useDispatch();
-  useEffect(()=>{
-    dispatch(getAllPublicListing({getToken}));
-  },[])
+  useEffect(() => {
+    dispatch(getAllPublicListing());
+  }, []);
 
-  useEffect(()=>{
-    if(isLoaded && user){
-      dispatch(getAllUserListing());
+  useEffect(() => {
+    if (isLoaded && user) {
+      dispatch(getAllUserListing({ getToken }));
     }
-  },[isLoaded,user])
+  }, [isLoaded, user]);
 
   return (
     <div>
@@ -53,7 +53,7 @@ const App = () => {
         <Route path='/listing/:listingId' element={<Listingdetails/>}/>
         <Route path='/create-listing' element={<Managelisting/>}/>
         <Route path='/edit-listing/:id' element={<Managelisting/>}/>
-        <Route path='/messages' element={<Messages/>}/>
+        <Route path='/Messages' element={<Messages/>}/>
         <Route path='/Myorders' element={<Myorders/>}/>
         <Route path='/loading' element={<Loading/>}/>
         <Route path='/about-us' element={<About/>}/>

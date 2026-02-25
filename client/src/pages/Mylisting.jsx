@@ -1,6 +1,7 @@
 import { ArrowDownCircleIcon, Ban, BanIcon, CheckCircle, Clock, CoinsIcon, DollarSign, Edit, Eye, EyeIcon, EyeOffIcon, LockIcon, PlusIcon, StarIcon, Trash, TrashIcon, TrendingUp, Users, WalletIcon, XCircle } from 'lucide-react';
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useAuth } from '@clerk/clerk-react';
 import { useNavigate } from 'react-router-dom';
 import StatsCard from '../components/StatsCard';
 import { platformIcons } from '../assets/assets';
@@ -17,7 +18,7 @@ const Mylisting = () => {
   const currency=import.meta.env.VITE_CURRENCY || '$';
   const navigate=useNavigate();
   const {getToken} =useAuth();
-  const dipatch=useDispatch();
+  const dispatch=useDispatch();
 
   const [showcredential,setShowcredential] =useState(null);
   const [showWithdrawl,setShowWithdrawl] =useState(null);
@@ -68,8 +69,8 @@ const Mylisting = () => {
         toast.loading('Updating listing status...');
         const token=await getToken();
         const {data}=await api.put(`/api/listing/${listingId}/status`,{},{headers:{Authorization:`Bearer ${token}`}});
-        dipatch(getAllUserListing({getToken}))
-        dipatch(getAllPublicListing())
+        dispatch(getAllUserListing({getToken}))
+        dispatch(getAllPublicListing())
 
         toast.dismissAll();
         toast.success(data.message);
@@ -87,8 +88,8 @@ const Mylisting = () => {
         toast.loading('Deleting listing status...');
         const token=await getToken();
         const {data}=await api.delete(`/api/listing/${listingId}`,{headers:{Authorization:`Bearer ${token}`}});
-        dipatch(getAllUserListing({getToken}))
-        dipatch(getAllPublicListing())
+        dispatch(getAllUserListing({getToken}))
+        dispatch(getAllPublicListing())
 
         toast.dismissAll();
         toast.success(data.message);
@@ -104,8 +105,8 @@ const Mylisting = () => {
         toast.loading('Featurig listing ...');
         const token=await getToken();
         const {data}=await api.put(`/api/listing/featured/${listingId}/`,{},{headers:{Authorization:`Bearer ${token}`}});
-        dipatch(getAllUserListing({getToken}))
-        dipatch(getAllPublicListing())
+        dispatch(getAllUserListing({getToken}))
+        dispatch(getAllPublicListing())
 
         toast.dismissAll();
         toast.success(data.message);
@@ -117,7 +118,7 @@ const Mylisting = () => {
   }
 
   return (
-    <div className='px-6 md:px-16 lg:px-24 xl:px-32 pt-8'>
+    <div className='min-h-screen px-6 md:px-16 lg:px-24 xl:px-32 pt-24 pb-20 bg-slate-50'>
       {/* Header  */}
       <div className='flex flex-col md:flex-row justify-between items-start md:items-center mb-8'>
         <div>
@@ -142,9 +143,9 @@ const Mylisting = () => {
       {/* Balance section  */}
       <div className='flex flex-col sm:flex-row justify-between gap-4 xl:gap-20 p-6 mb-10 bg-white rounded-xl border border-gray-200'>
           {[
-            {label:'Earned' , value:balance.earned, icon: WalletIcon},
-            {label:'Withdrawn' , value:balance.withdrawn, icon: ArrowDownCircleIcon},
-            {label:'Available' , value:balance.available, icon: CoinsIcon}
+            {label:'Earned' , value:balance?.earned || 0, icon: WalletIcon},
+            {label:'Withdrawn' , value:balance?.withdrawn || 0, icon: ArrowDownCircleIcon},
+            {label:'Available' , value:balance?.available || 0, icon: CoinsIcon}
           ].map((item,index)=>(
             <div key={index} onClick={()=>item.label==="Available" && setShowWithdrawl(true)} className='flex flex-1 items-center justify-between p-4 rounded-lg border border-gray-100 cursor-pointer'>
                 <div className='flex items-center gap-3'>
@@ -162,15 +163,20 @@ const Mylisting = () => {
       {/* Listings  */}
       {userlistings.length === 0 ? 
       (
-        <div className='bg-white rounded-lg border border-gray-200 p-16 text-center'>
+        <div className='bg-white rounded-2xl border border-gray-200 p-12 text-center max-w-2xl mx-auto mt-10 shadow-sm'>
           <div className='w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4'>
             <PlusIcon className='text-gray-400 w-8 h-8 '/>
-            <h3 className='text-xl font-medium text-gray-800 mb-2'>No listing yet</h3>
-            <p className='text-gray-600 mb-6'>
-              Start by creating your first listing
-            </p>
-            <button onClick={()=>navigate('/create-listing')}className='bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-medium'>Create First Listing</button>
           </div>
+          <h3 className='text-xl font-semibold text-gray-900 mb-2'>No listings yet</h3>
+          <p className='text-sm text-gray-500 mb-6'>
+            Start by creating your first listing to showcase your social account.
+          </p>
+          <button
+            onClick={()=>navigate('/create-listing')}
+            className='premium-gradient hover:opacity-95 text-white px-6 py-2.5 rounded-xl font-semibold shadow-md transition-all'
+          >
+            Create First Listing
+          </button>
         </div>
       ):(
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>

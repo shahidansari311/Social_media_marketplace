@@ -38,7 +38,7 @@ const Managelisting = () => {
 
   const platform = ['youtube', 'instagram', 'tiktok', 'facebook', 'twitter', 'linkedin', 'pinterest', 'snapchat', 'twitch', 'discord'];
 
-  const niches = ['lifestyle', 'fitness', 'food', 'travel', 'tech', 'gaming', 'fashion', 'beauty', 'business', 'education', 'entertainment', 'music', 'art', 'sports', 'health', 'finance', 'others'];
+  const niches = ['lifestyle', 'fitness', 'food', 'travel', 'tech', 'gaming', 'fashion', 'beauty', 'business', 'education', 'entertainment', 'music', 'art', 'sports', 'health', 'finance', 'other'];
 
   const ageRanges = ['13-17 years', '18-24 years', '25-34 years', '35-44 years', '45-54 years', '55+ years', 'Mixed ages'];
 
@@ -72,7 +72,7 @@ const Managelisting = () => {
       setLoadingListing(false);
     } else {
       toast.error("Listing not found");
-      navigate("/my-listings");
+      navigate("/Mylisting");
     }
   }, [id])
 
@@ -96,7 +96,7 @@ const Managelisting = () => {
         toast.success(data.message)
         dispatch(getAllUserListing({getToken}))
         dispatch(getAllPublicListing())
-        navigate('/my-listings')
+        navigate('/Mylisting')
       }
       else{
         delete datacopy.images;
@@ -111,7 +111,7 @@ const Managelisting = () => {
         toast.success(data.message)
         dispatch(getAllUserListing({getToken}))
         dispatch(getAllPublicListing())
-        navigate('/my-listings')
+        navigate('/Mylisting')
     }
     } catch (error) {
       toast.dismissAll();
@@ -130,13 +130,13 @@ const Managelisting = () => {
   }
 
   return (
-    <div className='min-h-screen py-8'>
-      <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8'>
+    <div className='min-h-screen bg-slate-50 pt-24 pb-16 px-4 sm:px-6 lg:px-8'>
+      <div className='max-w-4xl mx-auto'>
         <div className='mb-8'>
-          <h1 className='text-3xl font-bold text-gray-800'>
+          <h1 className='text-3xl md:text-4xl font-bold text-gray-900'>
             {isEditing ? "Edit listing" : "List your account"}
           </h1>
-          <p className='text-gray-600 mt-2'>
+          <p className='text-gray-500 mt-2 text-sm md:text-base'>
             {isEditing ? 'Update your existing account listing ' : 'Create a mock listing to display your account info'}
           </p>
         </div>
@@ -174,15 +174,15 @@ const Managelisting = () => {
                 <SelectField label='Primary Audience Age Range' options={ageRanges} value={formData.age_range} onChange={(v) => handleInputChange('age_range', v)}/>                
             </div>
             <div className='space-y-3'>
-                <checkboxx label='Account is verified on the platform' checked={formData.verified} onChange={(v)=>handleInputChange('verified',v)}/>
-                <checkboxx label='Account is monetized ' checked={formData.monetized} onChange={(v)=>handleInputChange('monetized',v)}/>
+                <Checkboxx label='Account is verified on the platform' checked={formData.verified} onChange={(v)=>handleInputChange('verified',v)}/>
+                <Checkboxx label='Account is monetized ' checked={formData.monetized} onChange={(v)=>handleInputChange('monetized',v)}/>
             </div>
           </Section>
           
           {/* Pricing  */}
           <Section title='Pricing & description *'>
             <InputField label='Asking Price' type='number' min={0} value={formData.price} placeholder="2500.0" onChange={(v) => handleInputChange('price', v)} required={true}/>
-            <textAreafield label="Description *" value={formData.description} onChange={(v)=>handleInputChange('description',v)} required={true}/>
+            <TextAreafield label="Description *" value={formData.description} onChange={(v)=>handleInputChange('description',v)} required={true}/>
           </Section>
 
           <Section title='Screenshot & Proofs'>
@@ -208,8 +208,19 @@ const Managelisting = () => {
             )}
           </Section>
           <div className='flex justify-end gap-3 text-sm'>
-            <button onClick={()=>navigate(-1)} type='button' className='px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors'> Cancel</button>
-            <button onClick={()=>navigate(-1)} type='button' className='px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors'> {isEditing ? 'Update Listing' : 'Create listing'}</button>
+            <button
+              type='button'
+              onClick={() => navigate(-1)}
+              className='px-6 py-2 rounded-xl border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition-colors'
+            >
+              Cancel
+            </button>
+            <button
+              type='submit'
+              className='px-7 py-2.5 rounded-xl premium-gradient text-white font-semibold shadow-md hover:shadow-lg transform hover:scale-[1.02] active:scale-95 transition-all'
+            >
+              {isEditing ? 'Update Listing' : 'Create listing'}
+            </button>
           </div>
         </form>
       </div>
@@ -219,8 +230,8 @@ const Managelisting = () => {
 
 // common Element 
 const Section = ({ title, children }) => (
-  <div className='bg-white rounded-lg border border-gray-200 p-5'>
-    <h2 className='text-lg font-semibold text-gray-800'>{title}</h2>
+  <div className='glass-card rounded-3xl p-6 md:p-7 space-y-6'>
+    <h2 className='text-lg font-semibold text-gray-900'>{title}</h2>
     {children}
   </div>
 )
@@ -228,14 +239,28 @@ const Section = ({ title, children }) => (
 const InputField = ({ label, value, onChange, placeholder, type = 'text', required = false, min = null, max = null }) => (
   <div>
     <label className='block text-sm font-medium text-gray-700 mb-2'>{label}</label>
-    <input type={type} min={min} max={max} placeholder={placeholder} value={value} onChange={(e) => onChange(e.target.value)} className='w-full px-3 py-1.5 text-gray-600 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 border-gray-300' required={required} />
+    <input
+      type={type}
+      min={min}
+      max={max}
+      placeholder={placeholder}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className='w-full rounded-2xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500'
+      required={required}
+    />
   </div>
 )
 
 const SelectField = ({ label, options, value, onChange, required = false }) => (
   <div className=''>
     <label className='block text-sm font-medium text-gray-700 mb-2'>{label}</label>
-    <select value={value} onChange={(e) => onChange(e.target.value)} className='w-full px-3 py-1.5 text-gray-600 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 border-gray-300' required={required}>
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className='w-full rounded-2xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500'
+      required={required}
+    >
       <option value=''>Select...</option>
       {options.map((opt) => (
         <option key={opt} value={opt}>
@@ -246,18 +271,24 @@ const SelectField = ({ label, options, value, onChange, required = false }) => (
   </div>
 )
 
-const checkboxx=({label,checked , onChange ,required=false})=>(
+const Checkboxx=({label,checked , onChange ,required=false})=>(
   <label className='flex items-center space-x-2 cursor-pointer'>
-    <input type="checkbox" checked={checked} onChange={(e)=>onChange(e.target.checked)} className='size-4' required={required}/>
+    <input type="checkbox" checked={checked} onChange={(e)=>onChange(e.target.checked)} className='size-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500' required={required}/>
     <span className='text-sm text-gray-700'>{label}</span>
   </label>
 )
 
 
-const textAreafield=({label,value,onChange,required=false})=>(
+const TextAreafield=({label,value,onChange,required=false})=>(
   <div>
-    <label className='block text-sm font-medium tetx-gray-700 mb-2'>{label}</label>
-    <textarea rows={5} value={value} onChange={(e)=>onChange(e.target.value)} className='w-full px-3 py-1.5 text-gray-600 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 border-gray-300' required={required}/>
+    <label className='block text-sm font-medium text-gray-700 mb-2'>{label}</label>
+    <textarea
+      rows={5}
+      value={value}
+      onChange={(e)=>onChange(e.target.value)}
+      className='w-full rounded-2xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500'
+      required={required}
+    />
   </div>
 )
 

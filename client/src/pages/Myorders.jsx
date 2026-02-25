@@ -26,7 +26,7 @@ const Myorders = () => {
       const {data}=await api.get('/api/listing/user-orders',{headers:{Authorization:`Bearer ${token}`}})
       setOrders(data.orders)
     } catch (error) {
-      toast.error(error?.reponse?.data?.message || error?.message);
+      toast.error(error?.response?.data?.message || error?.message);
     }finally{
       setloading(false);
     }
@@ -63,9 +63,9 @@ const Myorders = () => {
 
   if(!orders.length){
     return (
-      <div className='px-4 md:px-16 lg:px-24 xl:px-32'>
-        <div className='max-w-2xl mx-auto mt-14 bg-white rounded-xl border border-gray-200 p-8 text-center'>
-          <h3 className='text-lg font-semibold'>No orders yet</h3>
+      <div className='min-h-screen px-4 md:px-16 lg:px-24 xl:px-32 pt-24 pb-20 bg-slate-50'>
+        <div className='max-w-2xl mx-auto mt-12 bg-white rounded-2xl border border-gray-200 p-10 text-center shadow-sm'>
+          <h3 className='text-xl font-semibold text-gray-900'>No orders yet</h3>
           <p className='text-sm text-gray-500 mt-2'>
             You haven't purchased any listings yet.
           </p>
@@ -75,7 +75,7 @@ const Myorders = () => {
   }
 
   return (
-    <div className='px-4 md:px-16 lg:px-24 xl:px-32 py-6'>
+    <div className='min-h-screen px-4 md:px-16 lg:px-24 xl:px-32 pt-24 pb-20 bg-slate-50'>
       <h2 className='text-2xl font-semibold mb-6'>My orders</h2>
 
       <div className='space-y-4'>
@@ -142,10 +142,10 @@ const Myorders = () => {
                   </div>
                 </div>
               </div>
-              {iseExpanded && (
+              {iseExpanded && credential && (
                 <div className='mt-4 md:mt-0 pt-4'>
                   <div className='space-y-2'>
-                    {credential.updatedCredential.map((cred)=>(
+                    {(credential.updatedCredential || []).map((cred)=>(
                       <div key={cred.name} className='flex items-center justify-between gap-3 bg-gray-50 rounded-md p-2'>
                         <div>
                           <p className='text-sm font-medium text-gray-800'>

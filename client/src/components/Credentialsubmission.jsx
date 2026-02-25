@@ -1,8 +1,9 @@
-import { CirclePlus, CirclePlusIcon, X, XIcon } from 'lucide-react';
+import { CirclePlus, X } from 'lucide-react';
 import React, { useState } from 'react'
 import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
-import {useAuth} from '@clerk/clerk-react'
+import { useAuth } from '@clerk/clerk-react'
+import api from '../config/axios';
 import { getAllPublicListing, getAllUserListing } from '../app/features/listingSlice';
 
 const Credentialsubmission = ({ onClose, listing }) => {
@@ -11,8 +12,8 @@ const Credentialsubmission = ({ onClose, listing }) => {
         { type: "email", name: "Email", value: "" },
         { type: "password", name: "Password", value: "" },
     ]);
-    const {getToken}=useAuth();
-    const dispatch=useDispatch();
+    const { getToken } = useAuth();
+    const dispatch = useDispatch();
 
     const handleAddfiled = () => {
         const name = newField.trim();
@@ -41,20 +42,24 @@ const Credentialsubmission = ({ onClose, listing }) => {
 
             const confirm = window.confirm("Credentials will be verified & changed post submission. Are you sure you want to submit ? ");
             if(!confirm) return ;
-            const token=await getToken();
-            const {data}=await api.post('/api/listing/add-credential',{credential, listingId:listing.id},{headers:{Autherization:`Bearer ${token}`}})
+            const token = await getToken();
+            const { data } = await api.post(
+                '/api/listing/add-credential',
+                { credential, listingId: listing.id },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
             toast.success(data.message);
-            dispatch(getAllUserListing(({getToken})))
-            // dispatch(getAllPublicListing(()))
-            onclose();
+            dispatch(getAllUserListing({ getToken }));
+            dispatch(getAllPublicListing());
+            onClose();
         } catch (error) {
-            toast.error(error?.repsonse?.data?.message || error?.message);
+            toast.error(error?.response?.data?.message || error?.message);
             console.log(error);
         }
     }
 
     return (
-        <div className='fixed inset-0 bg-black/70 backdrop-blur bg-opacity-50 z-100 flex items-center justify-center sm:p-4'>
+        <div className='fixed inset-0 bg-black/70 backdrop-blur bg-opacity-50 z-[100] flex items-center justify-center sm:p-4'>
             <div className='bg-white sm:rounded-lg shadow-2xl w-full max-w-lg h-screen sm:h-[320px] flex flex-col'>
                 {/* Header */}
                 <div className='bg-gradient-to-r from-indigo-600 to-indigo-400 text-white p-4 sm:rounded-t-lg flex items-center justify-between'>
@@ -87,7 +92,7 @@ const Credentialsubmission = ({ onClose, listing }) => {
                     </div>
 
                     {/* Submit Button  */}
-                    <button type='button' className='bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 mt-4 rounded-md'>
+                    <button type='submit' className='bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 mt-4 rounded-md'>
                         Submit
                     </button>
                 </form>

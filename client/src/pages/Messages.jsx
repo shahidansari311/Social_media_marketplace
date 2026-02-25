@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { dummyChats } from '../assets/assets';
 import { MessageCircle, Search } from 'lucide-react';
 import { format ,isToday , isYesterday , parseISO } from 'date-fns';
 import { useDispatch } from 'react-redux';
@@ -11,8 +10,8 @@ import toast from 'react-hot-toast';
 const Messages = () => {
 
   const {getToken}=useAuth();
-  const {user,isLoaded}=useUser;
-  const [chat,setChats]=useState([]);
+  const { user, isLoaded } = useUser();
+  const [chats, setChats] = useState([]);
   const [searchQuery,setSearchQuery]=useState('');
   const [Loading,setLoading]=useState(true);
   const dispatch=useDispatch();
@@ -32,12 +31,15 @@ const Messages = () => {
 
   const filterChats = useMemo(()=>{
     const query = searchQuery.toLowerCase();
-    return chat.filter((chats)=>{
-      const chatUser = chats.chatUserId === user?.id ? chats?.ownerUser : chats?.chatUser;
+    return chats.filter((chatItem)=>{
+      const chatUser = chatItem.chatUserId === user?.id ? chatItem?.ownerUser : chatItem?.chatUser;
 
-      return chats.listing?.title?.toLowerCase().includes(query) || chatUser?.name?.toLowerCase().includes(query);
+      return (
+        chatItem.listing?.title?.toLowerCase().includes(query) ||
+        chatUser?.name?.toLowerCase().includes(query)
+      );
     })
-  },[chat,searchQuery]);
+  },[chats,searchQuery,user]);
 
   const openChat=(chats)=>{
       dispatch(setChat({listing: chats.listing , chatId:chats.id}));
@@ -48,10 +50,10 @@ const Messages = () => {
     try {
       const token=await getToken();
       const {data}=await api.get('/api/chat/user',{headers:{Authorization:`Bearer ${token}`}})
-      setChat(data.chats);
+      setChats(data.chat || []);
       setLoading(false);
     } catch (error) {
-      toast.error(error?.reponse?.data?.message || error?.message);
+      toast.error(error?.response?.data?.message || error?.message);
       console.log(error.message);
       setLoading(false);
     }
@@ -68,31 +70,39 @@ const Messages = () => {
   },[user,isLoaded])
 
   return (
-    <div className='mx-auto min-h-screen px-6 md:px-16 lg:px-24 xl:px-32'>
-      <div className='py-10'>
+    <div className='mx-auto min-h-screen px-6 md:px-16 lg:px-24 xl:px-32 pt-24 pb-20 bg-slate-50'>
+      <div className=''>
         <div className='mb-8'>
-          <h1 className='text-3xl font-bold text-gray-800 mb-2'>
+          <h1 className='text-3xl md:text-4xl font-bold text-gray-900 mb-2'>
             Messages
           </h1>
-          <p className='text-gray-600'>Chat with buyers and sellers</p>
+          <p className='text-gray-500'>Chat with buyers and sellers</p>
         </div>
           <div className='relative max-w-xl mb-8'>
             <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5'/>
-            <input type="text" placeholder='Search conversations... ' value={searchQuery} onChange={(e)=>setSearchQuery(e.target.value)} className='w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-indigo-500' />
+            <input
+              type="text"
+              placeholder='Search conversations... '
+              value={searchQuery}
+              onChange={(e)=>setSearchQuery(e.target.value)}
+              className='w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500'
+            />
           </div>
 
           {/* Chat List  */}
           {Loading ? (
             <div className='text-center text-gray-500 py-20'>Loading messages....</div>
           ):filterChats.length === 0 ?(
-            <div className='bg-white rounded-lg shadow-xs border border-gray-200 p-16 text-center'>
+            <div className='bg-white rounded-2xl shadow-sm border border-gray-200 p-16 text-center'>
               <div className='w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4' >
                 <MessageCircle className='w-8 h-8 text-gray-400'/>
-                <h3 className='text-xl font-medium text-gray-800 mb-2'>{searchQuery ? "No chats found": "No messages yet"}</h3>
-                <p className='text-gray-600'>
-                  {searchQuery ? "Try a different search term ":" Start a conversation by viewing a listing and clicking 'Chat with seller'"}
-                </p>
               </div>
+              <h3 className='text-xl font-semibold text-gray-900 mb-2'>
+                {searchQuery ? "No chats found": "No messages yet"}
+              </h3>
+              <p className='text-sm text-gray-500 max-w-md mx-auto'>
+                {searchQuery ? "Try a different search term." : "Start a conversation by viewing a listing and clicking “Open Negotiation”."}
+              </p>
             </div>
           ):(
             <div className='bg-white rounded-lg shadow-xs border border-gray-200 divide-y divide-gray-200'>
