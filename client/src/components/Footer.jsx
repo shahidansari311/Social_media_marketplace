@@ -55,11 +55,11 @@ const Footer = () => {
                     <ul className="space-y-4 text-sm font-medium">
                         <li className="flex items-start gap-3">
                             <Mail className="size-4 text-brand-500 shrink-0 mt-0.5" />
-                            <span>support@socialbazar.io</span>
+                            <span>shahidansari945256@gmail.com</span>
                         </li>
                         <li className="flex items-start gap-3">
                             <MapPin className="size-4 text-brand-500 shrink-0 mt-0.5" />
-                            <span>Silicon Valley, CA</span>
+                            <span>Ghaziabad , Uttar Pradesh, India</span>
                         </li>
                     </ul>
                 </div>
@@ -67,7 +67,7 @@ const Footer = () => {
 
             <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
                 <p className="text-xs font-bold text-gray-500 tracking-wider">
-                    © 2026 SOCIALBAZAR ENGINE. ALL RIGHTS RESERVED.
+                    © 2026 SOCIALBAZAR. ALL RIGHTS RESERVED.
                 </p>
                 <div className="flex gap-8 text-xs font-bold text-gray-500 tracking-wider">
                     <a href="#" className="hover:text-white transition">PRIVACY POLICY</a>
