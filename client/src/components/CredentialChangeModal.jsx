@@ -3,7 +3,9 @@ import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { ArrowUpRightFromSquareIcon, CopyIcon, Loader2Icon, XIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { dummyOrders, socialMediaLinks } from '../assets/assets';
+import { socialMediaLinks } from '../assets/assets';
+import { useAuth } from '@clerk/clerk-react';
+import api from '../config/axios';
 
 const CredentialChangeModal = ({ listing, onClose }) => {
 
@@ -17,17 +19,40 @@ const CredentialChangeModal = ({ listing, onClose }) => {
         toast.success(`${name} copied to clipboard`);
     };
 
+    const { getToken } = useAuth();
+
     const fetchCredential = async () => {
-        setCredential(dummyOrders[0].credential)
-        setLoading(false);
+        try {
+            const token = await getToken();
+            const { data } = await api.get(`/api/admin/credentials/${listing.id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setCredential(data);
+            setNewCredential(data.originalCredential.map(c => ({ ...c, value: '' })));
+            setLoading(false);
+        } catch (error) {
+            console.error(error);
+            setLoading(false);
+        }
     };
 
     const changeCredential = async () => {
-
+        try {
+            const token = await getToken();
+            await api.post(`/api/admin/change-credential/${listing.id}`, { credentials: newCredential }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            toast.success("Credentials updated successfully");
+            onClose();
+        } catch (error) {
+            console.error(error);
+            toast.error("Failed to update credentials");
+        }
     };
 
     useEffect(() => {
         fetchCredential();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

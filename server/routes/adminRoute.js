@@ -8,6 +8,9 @@ import {
   getAllWithdrawals,
   updateWithdrawalStatus,
   getCredentialRequests,
+  verifyCredential,
+  changeCredential,
+  getListingCredentials,
 } from "../controllers/adminController.js";
 
 const adminRouter = express.Router();
@@ -21,5 +24,8 @@ adminRouter.get("/transactions", getAllTransactions);
 adminRouter.get("/withdrawals", getAllWithdrawals);
 adminRouter.post("/withdrawal-status/:id", updateWithdrawalStatus);
 adminRouter.get("/credential-requests", getCredentialRequests);
+adminRouter.post("/verify-credential/:id", verifyCredential);
+adminRouter.post("/change-credential/:id", changeCredential);
+adminRouter.get("/credentials/:id", getListingCredentials);
 
 export default adminRouter;

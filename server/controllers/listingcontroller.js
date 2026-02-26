@@ -2,6 +2,22 @@ import { protect } from "../middlewares/authMiddleware.js";
 import { prisma } from "../configs/prisma.js";
 import imagekit from "../configs/imagekit.js";
 import fs from "fs";
+import Stripe from "stripe";
+import { z } from "zod";
+
+const listingSchema = z.object({
+  title: z.string().min(3),
+  platform: z.string(),
+  username: z.string().optional(),
+  followers_count: z.number().min(0),
+  engagement_rate: z.number().optional(),
+  monthly_views: z.number().optional(),
+  niche: z.string(),
+  price: z.number().positive(),
+  description: z.string().optional(),
+  country: z.string().optional(),
+  age_range: z.string(),
+});
 
 export const addListings = async (req, res) => {
   try {
@@ -19,6 +35,7 @@ export const addListings = async (req, res) => {
 
     const accountDetails = JSON.parse(req.body.accountDetails);
 
+    // Parse numeric fields for validation
     accountDetails.followers_count = parseFloat(accountDetails.followers_count);
     accountDetails.engagement_rate = parseFloat(accountDetails.engagement_rate);
     accountDetails.monthly_views = parseFloat(accountDetails.monthly_views);
@@ -26,9 +43,12 @@ export const addListings = async (req, res) => {
     accountDetails.platform = accountDetails.platform.toLowerCase();
     accountDetails.niche = accountDetails.niche.toLowerCase();
 
-    accountDetails.username.startsWith("@")
-      ? (accountDetails.username = accountDetails.username.slice(1))
-      : null;
+    // Validate with Zod
+    const validatedData = listingSchema.parse(accountDetails);
+
+    if (validatedData.username?.startsWith("@")) {
+      validatedData.username = validatedData.username.slice(1);
+    }
 
     const uploadImages = req.files.map(async (file) => {
       const response = await imagekit.files.upload({
@@ -44,7 +64,7 @@ export const addListings = async (req, res) => {
     const images = await Promise.all(uploadImages);
     const listing = await prisma.listing.create({
       data: {
-        ...accountDetails,
+        ...validatedData,
         ownerId: userId,
         images,
       },
@@ -55,6 +75,12 @@ export const addListings = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        message: "Invalid input data",
+        errors: error.errors,
+      });
+    }
     return res.status(500).json({
       message: "Error while uploading account detials",
     });
@@ -426,21 +452,40 @@ export const purchaseAccount = async (req, res) => {
       },
     });
 
-    // Update listing status
-    await prisma.listing.update({
-      where: { id },
-      data: { status: "sold" },
-    });
-
-    // Update owner balance
-    await prisma.user.update({
-      where: { id: listing.ownerId },
-      data: {
-        earned: { increment: listing.price },
+    const origin = process.env.FRONTEND_URL || "http://localhost:5173";
+    const stripeinstance = new Stripe(process.env.STRIPE_SECRET_KEY);
+    const session = await stripeinstance.checkout.sessions.create({
+      success_url: `${origin}/Myorders`,
+      cancel_url: `${origin}/Marketplace`,
+      line_items: [
+        {
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: `Purchasing account @${listing.username} of ${listing.platform}`,
+            },
+            unit_amount: Math.floor(transaction.amount) * 100,
+          },
+          quantity: 1,
+        },
+      ],
+      mode: "payment",
+      metadata: {
+        transactionId: transaction.id,
+        appId: "Socialbazar",
       },
+      expires_at: Math.floor(Date.now() / 1000) + 30 * 60,
     });
 
-    return res.json({ message: "Account purchased successfully", transaction });
+    // // Update listing status from active to pending to reserve it?
+    // // For now, we'll wait for the webhook to mark as sold.
+    // await prisma.listing.update({
+    //   where: { id },
+    //   data: { status: "pending" },
+    // });
+
+    // return res.json({ message: "Account purchased successfully", transaction });
+    return res.json({ paymentLink: session.url });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: error.message });

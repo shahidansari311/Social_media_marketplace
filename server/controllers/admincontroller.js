@@ -128,3 +128,49 @@ export const getCredentialRequests = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const verifyCredential = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { verified } = req.body;
+    const listing = await prisma.listing.update({
+      where: { id },
+      data: { isCredentialVerified: verified },
+    });
+    res.json(listing);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const changeCredential = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { credentials } = req.body;
+
+    await prisma.credential.updateMany({
+      where: { listingId: id },
+      data: { updatedCredential: credentials },
+    });
+
+    const listing = await prisma.listing.update({
+      where: { id },
+      data: { isCredentialChanged: true },
+    });
+    res.json(listing);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getListingCredentials = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const credentials = await prisma.credential.findFirst({
+      where: { listingId: id },
+    });
+    res.json(credentials);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

@@ -22,8 +22,12 @@
     "express": "^5.2.1",
     "inngest": "^3.52.0",
     "multer": "^2.0.2",
+    "nodemailer": "^8.0.1",
     "prisma": "^6.19.2",
-    "ws": "^8.19.0"
+    "stripe": "^20.4.0",
+    "svix": "^1.86.0",
+    "ws": "^8.19.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"

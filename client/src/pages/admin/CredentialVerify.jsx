@@ -1,23 +1,34 @@
+import React, { useEffect, useState } from 'react';
 import AdminTitle from '../../components/AdminTitle';
-import { useEffect } from 'react';
-import { useState } from 'react';
 import CredentialVerifyModal from '../../components/CredentialVerifyModal';
 import { Loader2Icon } from 'lucide-react';
-import { dummyListings } from '../../assets/assets';
+import { useAuth } from '@clerk/clerk-react';
+import api from '../../config/axios';
 
 const CredentialVerify = () => {
 
+    const { getToken } = useAuth();
     const [listings, setListings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(null);
 
     const fetchAllUnverifiedListings = async () => {
-        setListings(dummyListings);
-        setLoading(false);
+        try {
+            const token = await getToken();
+            const { data } = await api.get('/api/admin/credential-requests', {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setListings(data.filter(l => l.isCredentialSubmitted && !l.isCredentialVerified));
+            setLoading(false);
+        } catch (error) {
+            console.error(error);
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
         fetchAllUnverifiedListings();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return loading ? (

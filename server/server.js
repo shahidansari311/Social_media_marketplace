@@ -8,14 +8,31 @@ import { functions, inngest } from "./inngest/index.js";
 import listingRouter from "./routes/listingroute.js";
 import chatRouter from "./routes/chatroute.js";
 import adminRouter from "./routes/adminRoute.js";
+import { stripeWebhook } from "./webhooks/stripe.webhook.js";
+import { clerkWebhook } from "./webhooks/clerk.webhook.js";
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+// Stripe Webhook needs raw body - BEFORE express.json()
+app.post(
+  "/api/webhook/stripe",
+  express.raw({ type: "application/json" }),
+  stripeWebhook,
+);
+
+// Clerk Webhook needs standard JSON body
+app.post("/api/webhook/clerk", express.json(), clerkWebhook);
+
 // Middleware order matters!
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use(clerkMiddleware());
 

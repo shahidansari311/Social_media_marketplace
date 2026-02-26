@@ -3,7 +3,9 @@ import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { ArrowUpRightFromSquareIcon, CopyIcon, Loader2Icon, XIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { dummyOrders, getProfileLink } from '../assets/assets';
+import { getProfileLink } from '../assets/assets';
+import { useAuth } from '@clerk/clerk-react';
+import api from '../config/axios';
 
 const CredentialVerifyModal = ({ listing, onClose }) => {
 
@@ -18,17 +20,39 @@ const CredentialVerifyModal = ({ listing, onClose }) => {
         toast.success(`${name} copied to clipboard`);
     };
 
+    const { getToken } = useAuth();
+
     const fetchCredential = async () => {
-        setCredential(dummyOrders[0].credential)
-        setLoading(false);
+        try {
+            const token = await getToken();
+            const { data } = await api.get(`/api/admin/credentials/${listing.id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setCredential(data);
+            setLoading(false);
+        } catch (error) {
+            console.error(error);
+            setLoading(false);
+        }
     };
 
     const verifyCredential = async () => {
-
+        try {
+            const token = await getToken();
+            await api.post(`/api/admin/verify-credential/${listing.id}`, { verified: true }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            toast.success("Credential verified successfully");
+            onClose();
+        } catch (error) {
+            console.error(error);
+            toast.error("Failed to verify credential");
+        }
     };
 
     useEffect(() => {
         fetchCredential();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

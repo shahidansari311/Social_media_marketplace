@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {dummyOrders, platformIcons} from '../assets/assets'
+import { platformIcons } from '../assets/assets'
 import { CheckCircle2, ChevronDown, ChevronUp, Copy, DollarSign, Loader2Icon } from 'lucide-react';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
@@ -79,10 +79,10 @@ const Myorders = () => {
       <h2 className='text-2xl font-semibold mb-6'>My orders</h2>
 
       <div className='space-y-4'>
-        {orders.map((orders)=>{
-          const id=orders.id;
-          const listing =orders.listing;
-          const credential = orders.credential;
+        {orders.map((order)=>{
+          const id=order.id;
+          const listing =order.listing;
+          const credential = order.credential;
           const iseExpanded= expandedId === id;
 
 
