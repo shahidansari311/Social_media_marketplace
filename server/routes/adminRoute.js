@@ -11,7 +11,7 @@ import {
   verifyCredential,
   changeCredential,
   getListingCredentials,
-} from "../controllers/adminController.js";
+} from "../controllers/admincontroller.js";
 
 const adminRouter = express.Router();
 
