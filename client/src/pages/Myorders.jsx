@@ -18,7 +18,7 @@ const Myorders = () => {
   const [loading,setloading] =useState(true);
   const [expandedId,setexpandedId] =useState(null);
 
-  const fetchOders=async()=>{
+  const fetchOders= React.useCallback(async()=>{
     
     try {
       setloading(true);
@@ -31,13 +31,25 @@ const Myorders = () => {
       setloading(false);
     }
 
-  }
+  }, [getToken]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('success')) {
+      toast.success('Payment successful! Your credentials are now available.');
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+    if (params.get('canceled')) {
+      toast.error('Payment cancelled.');
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
 
   useEffect(()=>{
     if(user && isLoaded){
       fetchOders();
     }
-  },[isLoaded,user])
+  },[isLoaded,user, fetchOders])
 
   const mask =(val,type)=>{
     if(!val && val !==0 ) return "-";
@@ -48,7 +60,7 @@ const Myorders = () => {
     try {
       await navigator.clipboard.writeText(txt);
       toast.success("Copied to clipboard");
-    } catch (error) {
+    } catch {
       toast.error("Copied failed");
     }
   }
@@ -116,7 +128,7 @@ const Myorders = () => {
                     <div className='text-right'>
                           <p className='text-2xl font-bold'>
                             {currency} 
-                            {Number(orders.amount).toLocaleString() }
+                            {Number(order.amount).toLocaleString() }
                           </p>
                           <p className='text-sm text-gray-500'>USD</p>
                     </div>
@@ -138,7 +150,7 @@ const Myorders = () => {
                 </button>
                 <div className='text-xs text-gray-500 mt-2 text-right'>
                   <div>
-                    Credential Purchased : {format(new Date(orders.createdAt), "MMM d, yyyy")}
+                    Credential Purchased : {format(new Date(order.createdAt), "MMM d, yyyy")}
                   </div>
                 </div>
               </div>

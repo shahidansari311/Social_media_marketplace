@@ -1,5 +1,7 @@
-import express from "express";
 import dotenv from "dotenv";
+dotenv.config();
+
+import express from "express";
 import cors from "cors";
 import { clerkMiddleware, getAuth } from "@clerk/express";
 import { prisma } from "./configs/prisma.js";
@@ -10,8 +12,6 @@ import chatRouter from "./routes/chatroute.js";
 import adminRouter from "./routes/adminRoute.js";
 import { stripeWebhook } from "./webhooks/stripe.webhook.js";
 import { clerkWebhook } from "./webhooks/clerk.webhook.js";
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 4000;

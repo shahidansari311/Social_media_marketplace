@@ -454,17 +454,25 @@ export const purchaseAccount = async (req, res) => {
 
     const origin = process.env.FRONTEND_URL || "http://localhost:5173";
     const stripeinstance = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+    // Get user details for pre-filling checkout
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+
     const session = await stripeinstance.checkout.sessions.create({
-      success_url: `${origin}/Myorders`,
-      cancel_url: `${origin}/Marketplace`,
+      automatic_payment_methods: { enabled: true },
+      customer_email: user?.email,
+      success_url: `${origin}/Myorders?success=true`,
+      cancel_url: `${origin}/Marketplace?canceled=true`,
       line_items: [
         {
           price_data: {
             currency: "usd",
             product_data: {
               name: `Purchasing account @${listing.username} of ${listing.platform}`,
+              description: `Secure transaction for social media asset: ${listing.title}`,
+              images: listing.images?.length > 0 ? [listing.images[0]] : [],
             },
-            unit_amount: Math.floor(transaction.amount) * 100,
+            unit_amount: Math.round(Number(transaction.amount) * 100),
           },
           quantity: 1,
         },
@@ -472,6 +480,8 @@ export const purchaseAccount = async (req, res) => {
       mode: "payment",
       metadata: {
         transactionId: transaction.id,
+        listingId: id,
+        buyerId: userId,
         appId: "Socialbazar",
       },
       expires_at: Math.floor(Date.now() / 1000) + 30 * 60,

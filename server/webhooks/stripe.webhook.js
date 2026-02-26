@@ -20,40 +20,62 @@ export const stripeWebhook = async (req, res) => {
 
   // Handle the event
   switch (event.type) {
-    case "checkout.session.completed":
+    case "checkout.session.completed": {
       const session = event.data.object;
-      const { transactionId } = session.metadata;
+      const { transactionId, appId } = session.metadata;
 
-      if (transactionId) {
-        try {
-          // Update transaction
-          const transaction = await prisma.transaction.update({
+      // Only process transactions for this specific app
+      if (appId !== "Socialbazar" || !transactionId) {
+        return res.json({ received: true, ignored: true });
+      }
+
+      if (session.payment_status !== "paid") {
+        console.log(`Session ${session.id} not paid yet.`);
+        return res.json({ received: true });
+      }
+
+      try {
+        // Find the transaction first to ensure it exists
+        const existingTx = await prisma.transaction.findUnique({
+          where: { id: transactionId },
+          include: { listing: true },
+        });
+
+        if (!existingTx) {
+          console.error(`Transaction ${transactionId} not found.`);
+          return res.status(404).json({ message: "Transaction not found" });
+        }
+
+        if (existingTx.isPaid) {
+          console.log(`Transaction ${transactionId} already processed.`);
+          return res.json({ received: true });
+        }
+
+        // Update transaction, listing, and owner balance in a transaction for atomicity
+        await prisma.$transaction([
+          prisma.transaction.update({
             where: { id: transactionId },
             data: { isPaid: true },
-            include: { listing: true },
-          });
-
-          // Update listing status
-          await prisma.listing.update({
-            where: { id: transaction.listingId },
+          }),
+          prisma.listing.update({
+            where: { id: existingTx.listingId },
             data: { status: "sold" },
-          });
-
-          // Update owner balance
-          await prisma.user.update({
-            where: { id: transaction.ownerId },
+          }),
+          prisma.user.update({
+            where: { id: existingTx.ownerId },
             data: {
-              earned: { increment: transaction.amount },
+              earned: { increment: existingTx.amount },
             },
-          });
+          }),
+        ]);
 
-          console.log(`Transaction ${transactionId} processed successfully.`);
-        } catch (error) {
-          console.error("Error updating transaction/listing:", error);
-          return res.status(500).json({ message: "Internal Server Error" });
-        }
+        console.log(`Transaction ${transactionId} processed successfully.`);
+      } catch (error) {
+        console.error("Error processing successful payment:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
       }
       break;
+    }
 
     // Add other cases as needed (e.g., checkout.session.expired)
     case "checkout.session.expired":

@@ -1,22 +1,36 @@
 import { Outlet, Link } from "react-router-dom";
 import AdminSidebar from "../../components/AdminSidebar";
 import AdminNavbar from "../../components/AdminNavbar";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { ArrowRightIcon, Loader2Icon } from "lucide-react";
+import { useAuth } from "@clerk/clerk-react";
+import api from "../../config/axios";
 
 const Layout = () => {
     const [isAdmin, setIsAdmin] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const { getToken, isLoaded: isAuthLoaded } = useAuth();
 
-    const fetchIsAdmin = async () => {
-        setIsAdmin(true);
-        setIsLoading(false);
-    };
+    const fetchIsAdmin = useCallback(async () => {
+        try {
+            const token = await getToken();
+            const { data } = await api.get('/api/admin/check-status', {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setIsAdmin(data.success);
+        } catch (error) {
+            console.error("Admin verification failed:", error);
+            setIsAdmin(false);
+        } finally {
+            setIsLoading(false);
+        }
+    }, [getToken]);
 
     useEffect(() => {
+        if (isAuthLoaded) {
             fetchIsAdmin();
-    }, []);
+        }
+    }, [isAuthLoaded, fetchIsAdmin]);
 
     if (isLoading) {
         return (

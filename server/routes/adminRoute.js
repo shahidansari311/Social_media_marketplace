@@ -28,4 +28,6 @@ adminRouter.post("/verify-credential/:id", verifyCredential);
 adminRouter.post("/change-credential/:id", changeCredential);
 adminRouter.get("/credentials/:id", getListingCredentials);
 
+adminRouter.get("/check-status", (req, res) => res.json({ success: true }));
+
 export default adminRouter;

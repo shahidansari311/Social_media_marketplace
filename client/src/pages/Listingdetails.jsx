@@ -49,11 +49,15 @@ const Listingdetails = () => {
       });
 
       toast.dismissAll();
-      toast.success(data.message);
       
-      // Refresh listing data or navigate
-      dispatch(getAllPublicListing());
-      navigate('/Myorders');
+      if (data.paymentLink) {
+        window.location.href = data.paymentLink;
+      } else {
+        toast.success(data.message || "Purchase initiated");
+        // Refresh listing data or navigate
+        dispatch(getAllPublicListing());
+        navigate('/Myorders');
+      }
     } catch (error) {
       toast.dismissAll();
       toast.error(error?.response?.data?.message || 'Something went wrong');
