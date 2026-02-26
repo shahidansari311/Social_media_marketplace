@@ -2,25 +2,23 @@ import { useEffect, useState } from 'react';
 import { Loader2Icon } from 'lucide-react';
 import AdminTitle from '../../components/AdminTitle';
 import WithdrawalDetail from '../../components/WithdrawalDetail';
-import { dummyWithdrawalRequests } from '../../assets/assets';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAdminWithdrawals } from '../../app/features/adminSlice';
+import { useAuth } from '@clerk/clerk-react';
 
 const Withdrawal = () => {
     const currency = import.meta.env.VITE_CURRENCY || '$';
+    const dispatch = useDispatch();
+    const { getToken } = useAuth();
+    const { withdrawals, loading } = useSelector(state => state.admin);
 
-    const [requests, setRequests] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
     const [selectedRequest, setSelectedRequest] = useState(null);
 
-    const getRequests = async () => {
-        setRequests(dummyWithdrawalRequests);
-        setIsLoading(false);
-    };
-
     useEffect(() => {
-        getRequests();
-    }, []);
+        dispatch(fetchAdminWithdrawals({ getToken }));
+    }, [dispatch, getToken]);
 
-    if (isLoading) {
+    if (loading) {
         return (
             <div className='flex items-center justify-center h-full'>
                 <Loader2Icon className='size-7 text-indigo-500 animate-spin' />
@@ -44,14 +42,14 @@ const Withdrawal = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {requests.length === 0 ? (
+                        {withdrawals?.length === 0 ? (
                             <tr>
                                 <td colSpan='8' className='text-center py-6 text-gray-500'>
                                     No withdrawal requests found.
                                 </td>
                             </tr>
                         ) : (
-                            requests.map((req, index) => (
+                            withdrawals?.map((req, index) => (
                                 <tr key={req.id} className='border-t border-gray-200 hover:bg-indigo-50/50'>
                                     <td className='pl-4 py-3'>{index + 1}.</td>
                                     <td className='px-4 py-3 flex items-center gap-2'>
@@ -76,7 +74,7 @@ const Withdrawal = () => {
                     <WithdrawalDetail
                         data={selectedRequest}
                         onClose={() => {
-                            getRequests();
+                            dispatch(fetchAdminWithdrawals({ getToken }));
                             setSelectedRequest(null);
                         }}
                     />

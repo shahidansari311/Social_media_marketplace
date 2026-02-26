@@ -1,7 +1,7 @@
 import { useClerk, useUser, UserButton } from '@clerk/clerk-react';
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { GripIcon, MessageCircle, Menu, X, Rocket, LayoutDashboard, ShoppingBag } from 'lucide-react';
+import { GripIcon, MessageCircle, Menu, X, Rocket, LayoutDashboard, ShoppingBag, Heart } from 'lucide-react';
 
 const Navbar = () => {
     const { user } = useUser();
@@ -20,6 +20,7 @@ const Navbar = () => {
     const navLinks = [
         { name: 'Marketplace', path: '/Marketplace' },
         { name: 'Listings', path: '/Mylisting', protected: true },
+        { name: 'Wishlist', path: '/wishlist', protected: true },
         { name: 'Messages', path: '/Messages', protected: true },
     ];
 
@@ -63,6 +64,7 @@ const Navbar = () => {
                                     <UserButton.MenuItems>
                                         <UserButton.Action label="My Messages" labelIcon={<MessageCircle size={16}/>} onClick={() => navigate('/Messages')} />
                                         <UserButton.Action label="My Orders" labelIcon={<ShoppingBag size={16}/>} onClick={() => navigate('/Myorders')} />
+                                        <UserButton.Action label="My Wishlist" labelIcon={<Heart size={16}/>} onClick={() => navigate('/wishlist')} />
                                         <UserButton.Action label="Inventory" labelIcon={<LayoutDashboard size={16}/>} onClick={() => navigate('/Mylisting')} />
                                     </UserButton.MenuItems>
                                 </UserButton>

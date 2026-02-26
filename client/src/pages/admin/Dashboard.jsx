@@ -3,42 +3,28 @@ import AdminTitle from '../../components/AdminTitle';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import ListingDetailsModal from '../../components/ListingDetailsModal';
-import { dummyListings } from '../../assets/assets';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAdminDashboard } from '../../app/features/adminSlice';
+import { useAuth } from '@clerk/clerk-react';
 
 const Dashboard = () => {
     const currency = import.meta.env.VITE_CURRENCY || '$';
+    const dispatch = useDispatch();
+    const { getToken } = useAuth();
+    const { dashboard, loading } = useSelector(state => state.admin);
 
-    const [loading, setLoading] = useState(true);
-    const [dashboardData, setDashboardData] = useState({
-        totalListings: 0,
-        totalRevenue: 0,
-        activeListings: 0,
-        totalUser: 0,
-        recentListings: [],
-    });
     const [showModal, setShowModal] = useState(null);
 
     const dashboardCards = [
-        { title: 'Total Listings', value: dashboardData.totalListings || '0', icon: ChartLineIcon },
-        { title: 'Total Revenue', value: currency + dashboardData.totalRevenue.toLocaleString() || '0', icon: CircleDollarSignIcon },
-        { title: 'Active Listings', value: dashboardData.activeListings || '0', icon: ListIcon },
-        { title: 'Total Users', value: dashboardData.totalUser || '0', icon: UsersIcon },
+        { title: 'Total Listings', value: dashboard?.totalListings || '0', icon: ChartLineIcon },
+        { title: 'Total Revenue', value: currency + (dashboard?.totalRevenue?.toLocaleString() || '0'), icon: CircleDollarSignIcon },
+        { title: 'Active Listings', value: dashboard?.activeListings || '0', icon: ListIcon },
+        { title: 'Total Users', value: dashboard?.totalUser || '0', icon: UsersIcon },
     ];
 
-    const fetchDashboardData = async () => {
-        setDashboardData({
-            totalListings: 5,
-            totalRevenue: 2980,
-            activeListings: 3,
-            totalUser: 7,
-            recentListings: dummyListings,
-        });
-        setLoading(false);
-    };
-
     useEffect(() => {
-        fetchDashboardData();
-    }, []);
+        dispatch(fetchAdminDashboard({ getToken }));
+    }, [dispatch, getToken]);
 
     return loading ? (
         <div className='flex items-center justify-center h-full'>
@@ -74,7 +60,7 @@ const Dashboard = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {dashboardData.recentListings.map((listing, index) => (
+                        {dashboard?.recentListings?.map((listing, index) => (
                             <tr onClick={() => setShowModal(listing)} key={index} className='border-t border-gray-200 hover:bg-indigo-50/50 cursor-pointer'>
                                 <td className='pl-4 py-3'>{index + 1}.</td>
                                 <td className='px-4 py-3'>{listing.title}</td>

@@ -1,5 +1,8 @@
 import toast from 'react-hot-toast';
 import { XIcon, CopyIcon } from 'lucide-react';
+import { useDispatch } from 'react-redux';
+import { useAuth } from '@clerk/clerk-react';
+import { updateWithdrawalStatus } from '../app/features/adminSlice';
 
 const WithdrawalDetail = ({ data, onClose }) => {
     const currency = import.meta.env.VITE_CURRENCY || '$';
@@ -9,8 +12,17 @@ const WithdrawalDetail = ({ data, onClose }) => {
         toast.success(`${name} copied to clipboard`);
     };
 
+    const dispatch = useDispatch();
+    const { getToken } = useAuth();
+
     const markAsWithdrawn = async () => {
-        
+        try {
+            await dispatch(updateWithdrawalStatus({ id: data.id, isWithdrawn: true, getToken })).unwrap();
+            toast.success('Marked as withdrawn successfully');
+            onClose();
+        } catch (error) {
+            toast.error(error.message || 'Failed to update withdrawal status');
+        }
     };
 
     return (

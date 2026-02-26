@@ -1,15 +1,39 @@
 import React from 'react'
 import { platformIcons } from '../assets/assets'
-import { BadgeCheck, LineChart, MapPin, User, ArrowRight } from 'lucide-react'
+import { BadgeCheck, LineChart, MapPin, User, ArrowRight, Heart } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth, useUser } from '@clerk/clerk-react'
+import toast from 'react-hot-toast'
+import api from '../config/axios'
 
 const ListingCard = ({ listing }) => {
 
     const navigate=useNavigate();
+    const { user } = useUser();
+    const { getToken } = useAuth();
     const currency = import.meta.env.VITE_CURRENCY || '$'
+
+    const toggleWishlist = async (e) => {
+        e.stopPropagation();
+        if (!user) return toast.error("Please login to add to wishlist");
+        try {
+            const token = await getToken();
+            await api.post(`/api/listing/wishlist/${listing.id}`, {}, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            toast.success("Wishlist updated");
+        } catch (error) {
+            toast.error("Failed to update wishlist");
+        }
+    }
 
     return (
         <div className='group relative bg-white rounded-[2rem] border border-gray-100 overflow-hidden card-hover'>
+            {/* Wishlist Button */}
+            <button onClick={toggleWishlist} className='absolute top-4 right-4 p-2 bg-white/80 backdrop-blur rounded-full shadow-sm z-20 hover:scale-110 active:scale-95 transition'>
+                <Heart className='size-4 text-gray-400' />
+            </button>
+
             {/* Featured Banner */}
             {listing.featured && (
                 <div className='absolute top-0 left-0 w-full premium-gradient text-white text-[10px] text-center font-bold py-1.5 tracking-[0.2em] uppercase z-10'>

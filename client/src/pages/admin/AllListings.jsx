@@ -2,21 +2,30 @@ import AdminTitle from '../../components/AdminTitle';
 import { useEffect, useState } from 'react';
 import { CheckCircleIcon, Loader2Icon, MailCheckIcon, XIcon } from 'lucide-react';
 import ListingDetailsModal from '../../components/ListingDetailsModal';
-import { dummyListings } from '../../assets/assets';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAdminListings, updateListingStatus } from '../../app/features/adminSlice';
+import { useAuth } from '@clerk/clerk-react';
+import toast from 'react-hot-toast';
 
 const AllListings = () => {
-    const [loading, setLoading] = useState(true);
-    const [listings, setListings] = useState([]);
+    const dispatch = useDispatch();
+    const { getToken } = useAuth();
+    const { listings, loading } = useSelector(state => state.admin);
     const [showModal, setShowModal] = useState(null);
 
-    const fetchAllListings = async () => {
-        setListings(dummyListings);
-        setLoading(false);
+    const changeListingStatus = async (status, listing) => {
+        try {
+            await dispatch(updateListingStatus({ id: listing.id, status, getToken })).unwrap();
+            toast.success('Status updated successfully');
+            dispatch(fetchAdminListings({ getToken }));
+        } catch (error) {
+            toast.error(error.message || 'Failed to update status');
+        }
     };
 
-    const changeListingStatus = async (status, listing) => {
-        setListings((prev) => [...prev.filter((l) => l.id !== listing.id), { ...listing, status }]);
-    };
+    useEffect(() => {
+        dispatch(fetchAdminListings({ getToken }));
+    }, [dispatch, getToken]);
 
     const colorMapCredentials = {
         notSubmit: { bg: 'bg-red-100', text: 'text-red-600', icon: XIcon },
@@ -26,8 +35,8 @@ const AllListings = () => {
     };
 
     useEffect(() => {
-        fetchAllListings();
-    }, []);
+        dispatch(fetchAdminListings({ getToken }));
+    }, [dispatch, getToken]);
 
     return loading ? (
         <div className='flex items-center justify-center h-full'>

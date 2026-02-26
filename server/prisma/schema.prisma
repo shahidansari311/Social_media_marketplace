@@ -9,11 +9,17 @@ datasource db {
     // directUrl = env("DIRECT_URL")
 }
 
+enum Role {
+    USER
+    ADMIN
+}
+
 model User {
     id        String   @id
     email     String
     name      String
     image     String
+    role      Role     @default(USER)
     earned    Float    @default(0)
     withdrawn Float    @default(0)
     createdAt DateTime @default(now())
@@ -21,6 +27,7 @@ model User {
 
     // Relations
     Listing       Listing[]
+    favorites     String[]     @default([])
     ownerChats    Chat[]       @relation("OwnerChats")
     chatUserChats Chat[]       @relation("ChatUserChats")
     withdrawals   Withdrawal[]
@@ -65,6 +72,7 @@ enum Status {
     sold
     deleted
     inactive
+    pending
 }
 
 model Listing {

@@ -5,7 +5,7 @@ import fs from "fs";
 
 export const addListings = async (req, res) => {
   try {
-    const { userId } = await req.auth();
+    const { userId } = req.auth;
     if (req.plan !== "premium") {
       const listingcount = await prisma.listing.count({
         where: { ownerId: userId },
@@ -44,9 +44,9 @@ export const addListings = async (req, res) => {
     const images = await Promise.all(uploadImages);
     const listing = await prisma.listing.create({
       data: {
+        ...accountDetails,
         ownerId: userId,
         images,
-        ...accountDetails,
       },
     });
     return res.status(201).json({
@@ -88,7 +88,7 @@ export const getAllpubliclisting = async (req, res) => {
 //Constroller for getting all user listing
 export const getAlluserlisting = async (req, res) => {
   try {
-    const { userId } = await req.auth();
+    const { userId } = req.auth;
     const listing = await prisma.listing.findMany({
       where: { ownerId: userId, status: { not: "deleted" } },
       orderBy: { createdAt: "desc" },
@@ -116,7 +116,7 @@ export const getAlluserlisting = async (req, res) => {
 // constroller for updating listing in database
 export const updateListing = async (req, res) => {
   try {
-    const { userId } = await req.auth();
+    const { userId } = req.auth;
     const accountDetails = JSON.parse(req.body.accountDetails);
 
     if (req.files.length + accountDetails.images.length > 5) {
@@ -134,9 +134,16 @@ export const updateListing = async (req, res) => {
       ? (accountDetails.username = accountDetails.username.slice(1))
       : null;
 
+    const {
+      id: listingId,
+      ownerId: currentOwnerId,
+      images: existingImages,
+      ...updateData
+    } = accountDetails;
+
     const listing = await prisma.listing.update({
-      where: { id: accountDetails.id, ownerId: userId },
-      data: accountDetails,
+      where: { id: listingId, ownerId: userId },
+      data: updateData,
     });
 
     if (!listing) {
@@ -160,11 +167,11 @@ export const updateListing = async (req, res) => {
       const images = await Promise.all(uploadImages);
 
       const updatedListing = await prisma.listing.update({
-        where: { id: accountDetails.id, ownerId: userId },
+        where: { id: listingId, ownerId: userId },
         data: {
+          ...updateData,
           ownerId: userId,
-          ...accountDetails,
-          images: [...accountDetails.images, ...images],
+          images: [...existingImages, ...images],
         },
       });
       return res.json({
@@ -184,7 +191,7 @@ export const updateListing = async (req, res) => {
 export const toggleStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const { userId } = await req.auth();
+    const { userId } = req.auth;
     const listing = await prisma.listing.findUnique({
       where: { id, ownerId: userId },
     });
@@ -220,7 +227,7 @@ export const toggleStatus = async (req, res) => {
 
 export const deleteuserlisting = async (req, res) => {
   try {
-    const { userId } = await req.auth();
+    const { userId } = req.auth;
     const { listingId } = req.params;
     const listing = await prisma.listing.findFirst({
       where: { id: listingId, ownerId: userId },
@@ -256,7 +263,7 @@ export const deleteuserlisting = async (req, res) => {
 
 export const addCredential = async (req, res) => {
   try {
-    const { userId } = await req.auth();
+    const { userId } = req.auth;
     const { listingId, credential } = req.body;
 
     if (credential.length === 0 || !listingId) {
@@ -296,7 +303,7 @@ export const addCredential = async (req, res) => {
 
 export const markedFeatured = async (req, res) => {
   try {
-    const { userId } = await req.auth();
+    const { userId } = req.auth;
     const { id } = req.params;
     if (req.plan !== "premium") {
       return res.status(400).json({ message: "Premium plan required" });
@@ -325,7 +332,7 @@ export const markedFeatured = async (req, res) => {
 
 export const getAllUserOrders = async (req, res) => {
   try {
-    const { userId } = await req.auth();
+    const { userId } = req.auth;
     let orders = await prisma.transaction.findMany({
       where: { userId, isPaid: true },
       include: { listing: true },
@@ -356,7 +363,7 @@ export const getAllUserOrders = async (req, res) => {
 
 export const WithdrawAmount = async (req, res) => {
   try {
-    const { userId } = await req.auth();
+    const { userId } = req.auth;
     const { amount, account } = req.body;
 
     const user = await prisma.user.findUnique({ where: { id: userId } });
@@ -375,13 +382,6 @@ export const WithdrawAmount = async (req, res) => {
       },
     });
 
-    await prisma.user.update({
-      where: { id: userId },
-      data: {
-        withdrawn: { increment: amount },
-      },
-    });
-
     return res.json({ message: "Applied for withdrawal", withdrawal });
   } catch (error) {
     console.log(error);
@@ -393,7 +393,7 @@ export const WithdrawAmount = async (req, res) => {
 
 export const purchaseAccount = async (req, res) => {
   try {
-    const { userId } = await req.auth();
+    const { userId } = req.auth;
     const { id } = req.params;
 
     const listing = await prisma.listing.findUnique({
@@ -422,7 +422,7 @@ export const purchaseAccount = async (req, res) => {
         ownerId: listing.ownerId,
         userId: userId,
         amount: listing.price,
-        isPaid: true, // Assuming payment is processed
+        // isPaid: true,
       },
     });
 
@@ -441,6 +441,51 @@ export const purchaseAccount = async (req, res) => {
     });
 
     return res.json({ message: "Account purchased successfully", transaction });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export const toggleWishlist = async (req, res) => {
+  try {
+    const { userId } = req.auth;
+    const { id } = req.params;
+
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    let favorites = user.favorites || [];
+
+    if (favorites.includes(id)) {
+      favorites = favorites.filter((fav) => fav !== id);
+    } else {
+      favorites.push(id);
+    }
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: { favorites },
+    });
+
+    return res.json({ message: "Wishlist updated", favorites });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export const getWishlist = async (req, res) => {
+  try {
+    const { userId } = req.auth;
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    const listings = await prisma.listing.findMany({
+      where: { id: { in: user.favorites } },
+      include: { owner: true },
+    });
+
+    return res.json({ listings });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: error.message });

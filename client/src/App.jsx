@@ -9,6 +9,7 @@ import Myorders from './pages/Myorders'
 import Managelisting from './pages/Managelisting'
 import Listingdetails from './pages/Listingdetails'
 import Messages from './pages/Messages'
+import Wishlist from './pages/Wishlist'
 import Loading from './pages/Loading'
 import Navbar from './components/Navbar'
 import Chatbox from './components/Chatbox'
@@ -55,6 +56,7 @@ const App = () => {
         <Route path='/edit-listing/:id' element={<Managelisting/>}/>
         <Route path='/Messages' element={<Messages/>}/>
         <Route path='/Myorders' element={<Myorders/>}/>
+        <Route path='/wishlist' element={<Wishlist/>}/>
         <Route path='/loading' element={<Loading/>}/>
         <Route path='/about-us' element={<About/>}/>
         <Route path='/admin' element={<Layout/>}>

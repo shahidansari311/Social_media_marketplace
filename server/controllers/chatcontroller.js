@@ -3,7 +3,7 @@ import { prisma } from "../configs/prisma.js";
 //Controller for getting chat
 export const getChat = async (req, res) => {
   try {
-    const { userId } = req.auth();
+    const { userId } = req.auth;
     const { listingId, chatId } = req.body;
 
     const listing = await prisma.listing.findUnique({
@@ -82,7 +82,7 @@ export const getChat = async (req, res) => {
 
 export const getAllUserChats = async (req, res) => {
   try {
-    const { userId } = await req.auth();
+    const { userId } = req.auth;
     const chat = await prisma.chat.findMany({
       where: { OR: [{ chatUserId: userId }, { ownerUserId: userId }] },
       include: { listing: true, chatUser: true, ownerUser: true },
@@ -102,7 +102,7 @@ export const getAllUserChats = async (req, res) => {
 
 export const sendChatMessage = async (req, res) => {
   try {
-    const { userId } = await req.auth();
+    const { userId } = req.auth;
     const { chatId, message } = req.body;
     const chat = await prisma.chat.findFirst({
       where: {

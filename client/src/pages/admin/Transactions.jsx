@@ -3,23 +3,21 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import ListingDetailsModal from '../../components/ListingDetailsModal';
 import { Loader2Icon } from 'lucide-react';
-import { dummyOrders } from '../../assets/assets';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAdminTransactions } from '../../app/features/adminSlice';
+import { useAuth } from '@clerk/clerk-react';
 
 const Transactions = () => {
     const currency = import.meta.env.VITE_CURRENCY || '$';
+    const dispatch = useDispatch();
+    const { getToken } = useAuth();
+    const { transactions, loading } = useSelector(state => state.admin);
 
-    const [trasactions, setTransactions] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(null);
 
-    const getTransactions = async () => {
-        setTransactions(dummyOrders);
-        setLoading(false);
-    };
-
     useEffect(() => {
-        getTransactions();
-    }, []);
+        dispatch(fetchAdminTransactions({ getToken }));
+    }, [dispatch, getToken]);
 
     return loading ? (
         <div className='flex items-center justify-center h-full'>
@@ -42,7 +40,7 @@ const Transactions = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {trasactions.map((t, index) => (
+                        {transactions.map((t, index) => (
                             <tr key={index} className='border-t border-gray-200 hover:bg-indigo-50/50'>
                                 <td className='pl-4 py-3'>{index + 1}.</td>
                                 <td className='px-4 py-3'>@{t.listing.username}</td>

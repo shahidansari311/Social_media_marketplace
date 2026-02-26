@@ -11,6 +11,8 @@ import {
   toggleStatus,
   updateListing,
   WithdrawAmount,
+  toggleWishlist,
+  getWishlist,
 } from "../controllers/listingcontroller.js";
 import { protect } from "../middlewares/authMiddleware.js";
 import upload from "../configs/multer.js";
@@ -28,5 +30,7 @@ listingRouter.put("/featured/:id", protect, markedFeatured);
 listingRouter.get("/user-orders", protect, getAllUserOrders);
 listingRouter.post("/withdraw", protect, WithdrawAmount);
 listingRouter.post("/purchase-account/:id", protect, purchaseAccount);
+listingRouter.post("/wishlist/:id", protect, toggleWishlist);
+listingRouter.get("/wishlist", protect, getWishlist);
 
 export default listingRouter;

@@ -7,6 +7,7 @@ import { serve } from "inngest/express";
 import { functions, inngest } from "./inngest/index.js";
 import listingRouter from "./routes/listingroute.js";
 import chatRouter from "./routes/chatroute.js";
+import adminRouter from "./routes/adminRoute.js";
 
 dotenv.config();
 
@@ -60,6 +61,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/listing", listingRouter);
 app.use("/api/chat", chatRouter);
+app.use("/api/admin", adminRouter);
 
 app.get("/my-profile", async (req, res) => {
   const { userId } = getAuth(req);
