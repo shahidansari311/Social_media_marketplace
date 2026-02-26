@@ -27,9 +27,15 @@ app.post(
 app.post("/api/webhook/clerk", express.json(), clerkWebhook);
 
 // Middleware order matters!
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  "http://localhost:5173",
+  "https://socialbazar.vercel.app",
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin: allowedOrigins,
     credentials: true,
   }),
 );
