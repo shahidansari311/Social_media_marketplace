@@ -20,7 +20,7 @@ const Marketplace = () => {
   const [searchParams]=useSearchParams();
   const search=searchParams.get("search");
 
-  const filterlisting = listings.filter((listing) => {
+  const filterlisting = Array.isArray(listings) ? listings.filter((listing) => {
     if(filters.platform && filters.platform.length > 0) {
         if(!filters.platform.includes(listing.platform)) return false;
     }
@@ -43,7 +43,7 @@ const Marketplace = () => {
       ) return false;
     }
     return true;
-  });
+  }) : [];
 
   return (
     <div className='min-h-screen pt-12 px-6 md:px-16 lg:px-24 xl:px-40 pb-20'>

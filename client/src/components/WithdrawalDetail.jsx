@@ -26,7 +26,7 @@ const WithdrawalDetail = ({ data, onClose }) => {
     };
 
     return (
-        <div className='fixed inset-0 bg-black/70 backdrop-blur z-100 flex items-center justify-center sm:p-4'>
+        <div className='fixed inset-0 bg-black/70 backdrop-blur z-[100] flex items-center justify-center sm:p-4'>
             <div className='bg-white sm:rounded-lg shadow-2xl w-full max-w-xl h-screen sm:h-[480px] flex flex-col'>
                 {/* Header */}
                 <div className='bg-gradient-to-r from-indigo-600 to-indigo-400 text-white p-4 sm:rounded-t-lg flex items-center justify-between'>

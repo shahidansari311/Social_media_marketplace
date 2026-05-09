@@ -1,0 +1,108 @@
+
+> client@0.0.0 dev
+> vite
+
+
+  VITE v7.3.1  ready in 426 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+10:14:41 AM [vite] (client) hmr update /src/components/WithdrawalDetail.jsx, /src/index.css
+10:14:41 AM [vite] (client) hmr update /src/components/Filterbox.jsx, /src/index.css
+10:14:41 AM [vite] (client) hmr update /src/components/CredentialChangeModal.jsx, /src/index.css
+10:14:41 AM [vite] (client) hmr update /src/components/CredentialVerifyModal.jsx, /src/index.css
+10:18:14 AM [vite] (client) hmr update /src/pages/Managelisting.jsx, /src/index.css
+10:18:25 AM [vite] (client) hmr update /src/pages/Managelisting.jsx, /src/index.css
+10:18:30 AM [vite] (client) hmr update /src/pages/Listingdetails.jsx, /src/index.css
+10:22:27 AM [vite] (client) hmr update /src/pages/Marketplace.jsx, /src/index.css
+10:25:06 AM [vite] (client) hmr update /src/pages/Marketplace.jsx, /src/index.css
+10:25:16 AM [vite] (client) hmr update /src/pages/Marketplace.jsx, /src/index.css
+10:25:28 AM [vite] (client) hmr update /src/pages/Marketplace.jsx, /src/index.css
+10:25:33 AM [vite] (client) Pre-transform error: /app/client/src/pages/Marketplace.jsx: Missing semicolon. (18:4)
+
+  16 |     verified:false,
+  17 |     monetized:false,
+> 18 |   }) : [];
+     |     ^
+  19 |   const listings = useSelector(state => state.listing?.listings) ?? [];
+  20 |   const [searchParams]=useSearchParams();
+  21 |   const search=searchParams.get("search");
+  Plugin: vite:react-babel
+  File: /app/client/src/pages/Marketplace.jsx:18:4
+  16 |      verified:false,
+  17 |      monetized:false,
+  18 |    }) : [];
+     |      ^
+  19 |    const listings = useSelector(state => state.listing?.listings) ?? [];
+  20 |    const [searchParams]=useSearchParams();
+10:25:33 AM [vite] Internal server error: /app/client/src/pages/Marketplace.jsx: Missing semicolon. (18:4)
+
+  16 |     verified:false,
+  17 |     monetized:false,
+> 18 |   }) : [];
+     |     ^
+  19 |   const listings = useSelector(state => state.listing?.listings) ?? [];
+  20 |   const [searchParams]=useSearchParams();
+  21 |   const search=searchParams.get("search");
+  Plugin: vite:react-babel
+  File: /app/client/src/pages/Marketplace.jsx:18:4
+  16 |      verified:false,
+  17 |      monetized:false,
+  18 |    }) : [];
+     |      ^
+  19 |    const listings = useSelector(state => state.listing?.listings) ?? [];
+  20 |    const [searchParams]=useSearchParams();
+      at constructor (/app/client/node_modules/@babel/parser/lib/index.js:365:19)
+      at JSXParserMixin.raise (/app/client/node_modules/@babel/parser/lib/index.js:6599:19)
+      at JSXParserMixin.semicolon (/app/client/node_modules/@babel/parser/lib/index.js:6895:10)
+      at JSXParserMixin.parseVarStatement (/app/client/node_modules/@babel/parser/lib/index.js:13231:10)
+      at JSXParserMixin.parseStatementContent (/app/client/node_modules/@babel/parser/lib/index.js:12851:23)
+      at JSXParserMixin.parseStatementLike (/app/client/node_modules/@babel/parser/lib/index.js:12767:17)
+      at JSXParserMixin.parseStatementListItem (/app/client/node_modules/@babel/parser/lib/index.js:12747:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (/app/client/node_modules/@babel/parser/lib/index.js:13316:61)
+      at JSXParserMixin.parseBlockBody (/app/client/node_modules/@babel/parser/lib/index.js:13309:10)
+      at JSXParserMixin.parseBlock (/app/client/node_modules/@babel/parser/lib/index.js:13297:10)
+      at JSXParserMixin.parseFunctionBody (/app/client/node_modules/@babel/parser/lib/index.js:12100:24)
+      at JSXParserMixin.parseArrowExpression (/app/client/node_modules/@babel/parser/lib/index.js:12075:10)
+      at JSXParserMixin.parseParenAndDistinguishExpression (/app/client/node_modules/@babel/parser/lib/index.js:11687:12)
+      at JSXParserMixin.parseExprAtom (/app/client/node_modules/@babel/parser/lib/index.js:11331:23)
+      at JSXParserMixin.parseExprAtom (/app/client/node_modules/@babel/parser/lib/index.js:4764:20)
+      at JSXParserMixin.parseExprSubscripts (/app/client/node_modules/@babel/parser/lib/index.js:11081:23)
+      at JSXParserMixin.parseUpdate (/app/client/node_modules/@babel/parser/lib/index.js:11066:21)
+      at JSXParserMixin.parseMaybeUnary (/app/client/node_modules/@babel/parser/lib/index.js:11046:23)
+      at JSXParserMixin.parseMaybeUnaryOrPrivate (/app/client/node_modules/@babel/parser/lib/index.js:10899:61)
+      at JSXParserMixin.parseExprOps (/app/client/node_modules/@babel/parser/lib/index.js:10904:23)
+      at JSXParserMixin.parseMaybeConditional (/app/client/node_modules/@babel/parser/lib/index.js:10881:23)
+      at JSXParserMixin.parseMaybeAssign (/app/client/node_modules/@babel/parser/lib/index.js:10831:21)
+      at /app/client/node_modules/@babel/parser/lib/index.js:10800:39
+      at JSXParserMixin.allowInAnd (/app/client/node_modules/@babel/parser/lib/index.js:12421:16)
+      at JSXParserMixin.parseMaybeAssignAllowIn (/app/client/node_modules/@babel/parser/lib/index.js:10800:17)
+      at JSXParserMixin.parseVar (/app/client/node_modules/@babel/parser/lib/index.js:13384:91)
+      at JSXParserMixin.parseVarStatement (/app/client/node_modules/@babel/parser/lib/index.js:13230:10)
+      at JSXParserMixin.parseStatementContent (/app/client/node_modules/@babel/parser/lib/index.js:12851:23)
+      at JSXParserMixin.parseStatementLike (/app/client/node_modules/@babel/parser/lib/index.js:12767:17)
+      at JSXParserMixin.parseModuleItem (/app/client/node_modules/@babel/parser/lib/index.js:12744:17)
+      at JSXParserMixin.parseBlockOrModuleBlockBody (/app/client/node_modules/@babel/parser/lib/index.js:13316:36)
+      at JSXParserMixin.parseBlockBody (/app/client/node_modules/@babel/parser/lib/index.js:13309:10)
+      at JSXParserMixin.parseProgram (/app/client/node_modules/@babel/parser/lib/index.js:12622:10)
+      at JSXParserMixin.parseTopLevel (/app/client/node_modules/@babel/parser/lib/index.js:12612:25)
+      at JSXParserMixin.parse (/app/client/node_modules/@babel/parser/lib/index.js:14488:25)
+      at parse (/app/client/node_modules/@babel/parser/lib/index.js:14522:38)
+      at parser (/app/client/node_modules/@babel/core/lib/parser/index.js:41:34)
+      at parser.next (<anonymous>)
+      at normalizeFile (/app/client/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
+      at normalizeFile.next (<anonymous>)
+      at run (/app/client/node_modules/@babel/core/lib/transformation/index.js:22:50)
+      at run.next (<anonymous>)
+      at transform (/app/client/node_modules/@babel/core/lib/transform.js:22:33)
+      at transform.next (<anonymous>)
+      at step (/app/client/node_modules/gensync/index.js:261:32)
+      at /app/client/node_modules/gensync/index.js:273:13
+      at async.call.result.err.err (/app/client/node_modules/gensync/index.js:223:11)
+      at /app/client/node_modules/gensync/index.js:189:28
+      at /app/client/node_modules/@babel/core/lib/gensync-utils/async.js:67:7
+      at /app/client/node_modules/gensync/index.js:113:33
+10:27:42 AM [vite] (client) hmr update /src/components/Filterbox.jsx, /src/index.css
+10:50:54 AM [vite] (client) hmr update /src/pages/Marketplace.jsx, /src/index.css
+10:53:41 AM [vite] (client) hmr update /src/pages/Marketplace.jsx, /src/index.css
+10:54:19 AM [vite] (client) hmr update /src/pages/Marketplace.jsx, /src/index.css

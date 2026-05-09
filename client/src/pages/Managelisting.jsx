@@ -66,7 +66,7 @@ const Managelisting = () => {
     if (!id) return;
     setIsEditing(true);
     setLoadingListing(true);
-    const listing = userlistings.find((listing) => listing.id === id)
+    const listing = Array.isArray(userlistings) ? userlistings.find((listing) => listing.id === id) : null;
     if (listing) {
       setformData(listing);
       setLoadingListing(false);

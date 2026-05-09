@@ -18,7 +18,7 @@ const Listingdetails = () => {
   const navigate = useNavigate();
   const { listingId } = useParams();
   const { listings } = useSelector((state) => state.listing);
-  const listing = React.useMemo(() => listings?.find((item) => item.id === listingId), [listings, listingId]);
+  const listing = React.useMemo(() => Array.isArray(listings) ? listings.find((item) => item.id === listingId) : null, [listings, listingId]);
   const profileLink = listing && getProfileLink(listing.platform, listing.username);
   const [curr, setCurr] = useState(0);
   const images = listing?.images || [];

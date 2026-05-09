@@ -89,7 +89,7 @@ const Filterbox = ({ phone, setPhone, filters, setFilters }) => {
     }
 
     return (
-        <div className={`${phone ? "max-sm:fixed" : "max-sm:hidden"} max-sm:inset-0 z-100 max-sm:h-screen max-sm:overflow-scroll bg-white rounded-xl shadow-sm border border-gray-200 h-fit sticky top-24 md:min-w-[300px]`}>
+        <div className={`${phone ? "max-sm:fixed" : "max-sm:hidden"} max-sm:inset-0 z-[100] max-sm:h-screen max-sm:overflow-scroll bg-white rounded-xl shadow-sm border border-gray-200 h-fit sticky top-24 md:min-w-[300px]`}>
             <div className='p-4 border border-gray-200 rounded-xl'>
                 <div className='flex items-center justify-between'>
                     <div className='flex items-center space-x-2 text-gray-700'>
