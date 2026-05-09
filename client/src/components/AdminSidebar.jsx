@@ -17,12 +17,12 @@ const AdminSidebar = () => {
     ];
 
     return (
-        <div className='h-[calc(100vh-64px)] md:flex flex-col items-center pt-8 max-w-13 md:max-w-60 w-full border-r border-gray-200 text-sm'>
-            <img className='size-9 md:size-12 rounded-full mx-auto' src={user?.imageUrl} alt="sidebar" />
-            <p className='mt-2 text-base max-md:hidden'>{user?.firstName} {user?.lastName}</p>
+        <div className='h-[calc(100vh-64px)] flex flex-col items-center pt-8 w-16 md:w-60 border-r border-gray-200 text-sm bg-white shrink-0'>
+            <img className='size-9 md:size-12 rounded-full mx-auto border-2 border-indigo-100' src={user?.imageUrl} alt="sidebar" />
+            <p className='mt-2 text-base font-semibold text-gray-800 max-md:hidden'>{user?.firstName} {user?.lastName}</p>
             <div className='w-full'>
                 {adminNavlinks.map((link, index) => (
-                    <NavLink key={index} to={link.path} end className={({ isActive }) => `relative flex items-center max-md:justify-center gap-2 w-full py-2.5 min-md:pl-10 first:mt-6 text-gray-600 ${isActive && 'bg-indigo-500/10 text-indigo-600 group'}`}>
+                    <NavLink key={index} to={link.path} end className={({ isActive }) => `relative flex items-center justify-center md:justify-start gap-3 w-full py-4 md:pl-8 text-gray-500 transition-all ${isActive ? 'bg-indigo-50 text-indigo-600 font-bold' : 'hover:bg-gray-50 hover:text-gray-900'}`}>
                         {({ isActive }) => (
                             <>
                                 <link.icon className="w-5 h-5" />

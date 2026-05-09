@@ -80,7 +80,7 @@ const CredentialVerifyModal = ({ listing, onClose }) => {
                     <div className='flex flex-col items-start gap-3 p-4 overflow-y-scroll text-gray-700'>
                         {credential?.originalCredential.map((cred, index) => (
                             <div key={index} className='w-full flex items-center gap-2 group'>
-                                <span className='font-medium'>{cred.name}</span> : {cred.name.toLowerCase() === 'password' ? '********' : cred?.value} <CopyIcon onClick={() => copyToClipboard(cred)} size={14} className='group-hover:visible invisible' />
+                                <span className='font-medium'>{cred.name}</span> : {cred.name.toLowerCase() === 'password' ? '********' : cred?.value} <CopyIcon onClick={() => copyToClipboard(cred)} size={14} className='md:invisible md:group-hover:visible cursor-pointer text-indigo-500' />
                             </div>
                         ))}
 

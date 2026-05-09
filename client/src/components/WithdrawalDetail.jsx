@@ -64,7 +64,7 @@ const WithdrawalDetail = ({ data, onClose }) => {
                                             <p className='text-sm text-gray-500'>{field.name}</p>
                                             <p className='font-medium truncate'>{field.value}</p>
                                         </div>
-                                        <button onClick={() => copyToClipboard(field)} className='invisible group-hover:visible p-1 rounded hover:bg-gray-100' title={`Copy ${field.name}`}>
+                                        <button onClick={() => copyToClipboard(field)} className='md:invisible md:group-hover:visible p-1 rounded hover:bg-gray-100' title={`Copy ${field.name}`}>
                                             <CopyIcon className='w-4 h-4' />
                                         </button>
                                     </div>

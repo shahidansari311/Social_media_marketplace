@@ -22,6 +22,7 @@ const Mylisting = () => {
 
   const [showcredential,setShowcredential] =useState(null);
   const [showWithdrawl,setShowWithdrawl] =useState(null);
+  const [showMenu, setShowMenu] = useState(null);
 
   const totalValue=userlistings.reduce((sum,listing)=> sum+(listing.price || 0),0);
   const activeListing=userlistings.filter((listing)=>listing.status === 'active').length;
@@ -188,29 +189,41 @@ const Mylisting = () => {
                   <div className='flex-1'>
                     <div className='flex justify-between items-start'>
                       <h3 className='text-lg font-semibold text-gray-800'>{listing.title}</h3>
-                      <div className='flex items-center gap-2 relative group'>
-                        <div>
-                          <LockIcon/>
-                          <div className='invisible group-hover:visible absolute right-0 top-0 pt-4.5 z-10'>
-                            <div className='bg-white text-gray-600 text-xs rounded border border-gray-200 p-2 px-3'>
-                              {!listing.isCredentialSubmitted && 
-                                (<>
-                                <button onClick={()=>setShowcredential(listing)} className='flex items-center gap-2 text-nowrap' >
-                                  Add credential
-                                  <hr className='border-gray-200 my-2'/>
-                                </button>
+                      <div className='flex items-center gap-2 relative'>
+                        <div className='relative group'>
+                          <div 
+                            onClick={() => setShowMenu(showMenu === listing.id ? null : listing.id)}
+                            className='cursor-pointer p-1 hover:bg-gray-100 rounded-full transition-colors'
+                          >
+                            <LockIcon size={18} className='text-gray-500'/>
+                          </div>
+                          <div className={`${showMenu === listing.id ? 'visible opacity-100' : 'invisible opacity-0'} md:group-hover:visible md:group-hover:opacity-100 absolute right-0 top-full mt-2 z-20 transition-all duration-200`}>
+                            <div className='bg-white text-gray-700 text-sm rounded-xl border border-gray-200 p-3 shadow-xl min-w-[160px] animate-in fade-in zoom-in duration-200'>
+                              {!listing.isCredentialSubmitted && (
+                                <>
+                                  <button 
+                                    onClick={() => {
+                                      setShowcredential(listing);
+                                      setShowMenu(null);
+                                    }} 
+                                    className='flex items-center w-full gap-2 px-3 py-2 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg transition-colors'
+                                  >
+                                    <PlusIcon size={14}/>
+                                    <span className='font-medium'>Add credential</span>
+                                  </button>
+                                  <hr className='border-gray-100 my-1'/>
                                 </>
                               )}
-                              <button className='text-nowrap'>
-                                Status:{" "}
-                                <span className={
+                              <div className='px-3 py-2'>
+                                <p className='text-[10px] uppercase tracking-wider text-gray-400 font-bold mb-1'>Verification Status</p>
+                                <span className={`text-xs font-semibold ${
                                   listing.isCredentialSubmitted ? listing.isCredentialVerified ? listing.isCredentialChanged ?
                                   "text-green-600" : "text-indigo-600" : "text-slate-600" : "text-red-600"
-                                }>
+                                }`}>
                                   {listing.isCredentialSubmitted ? listing.isCredentialVerified ? listing.isCredentialChanged ? "Changed" :
                                   "Verified" : "Submitted" : "Not Submitted"}
                                 </span>
-                              </button>
+                              </div>
                             </div>
                           </div>
                         </div>
