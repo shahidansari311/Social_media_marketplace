@@ -14,7 +14,7 @@ const Hero = () => {
     }
 
     return (
-        <div className="relative overflow-hidden pt-16 pb-24 md:pt-24 md:pb-32">
+        <div className="relative overflow-hidden pt-24 pb-24 md:pt-24 md:pb-32">
             {/* Background blobs for premium feel */}
             <div className='absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] -z-10 overflow-hidden pointer-events-none'>
                 <div className='absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-brand-500/10 blur-[120px] rounded-full animate-pulse'></div>

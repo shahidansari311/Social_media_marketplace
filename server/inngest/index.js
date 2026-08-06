@@ -6,8 +6,7 @@ export const inngest = new Inngest({ id: "my-app" , eventKey: process.env.INNGES
 
 // Your new function:
 const syncuserCreation = inngest.createFunction(
-  { id: "sync-user-from-clerk" },
-  { event: "clerk/user.created" },
+  { id: "sync-user-from-clerk", triggers: [{ event: "clerk/user.created" }] },
   async ({ event}) => {
     const {data}=event;
 
@@ -40,8 +39,7 @@ const syncuserCreation = inngest.createFunction(
 
 //Inngest 
 const syncuserDeletion = inngest.createFunction(
-  { id: "delete-user-from-clerk" },
-  { event: "clerk/user.deleted" },
+  { id: "delete-user-from-clerk", triggers: [{ event: "clerk/user.deleted" }] },
   async ({ event}) => {
     const {data}=event;
     
@@ -69,8 +67,7 @@ const syncuserDeletion = inngest.createFunction(
 );
 
 const syncuserUpdation = inngest.createFunction(
-  { id: "update-user-from-clerk" },
-  { event: "clerk/user.updated" },
+  { id: "update-user-from-clerk", triggers: [{ event: "clerk/user.updated" }] },
   async ({ event}) => {
     const {data}=event;
     await prisma.user.update({
