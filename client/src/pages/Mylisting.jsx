@@ -120,7 +120,8 @@ const Mylisting = () => {
   }
 
   return (
-    <div className='min-h-screen px-6 md:px-16 lg:px-24 xl:px-32 pt-28 pb-20'>
+    <div className='min-h-screen pt-28 flex flex-col justify-between'>
+      <div className='px-6 md:px-16 lg:px-24 xl:px-32 pb-20 flex-1 w-full max-w-7xl mx-auto'>
       {/* Header  */}
       <div className='flex flex-col md:flex-row justify-between items-start md:items-center mb-8'>
         <div>
@@ -288,6 +289,7 @@ const Mylisting = () => {
           <WithdrawlModal onClose={()=>setShowWithdrawl(null)}/>
         )
       }
+      </div>
       <Footer />
     </div>
   )

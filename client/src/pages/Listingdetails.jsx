@@ -9,6 +9,7 @@ import { useAuth, useUser } from '@clerk/clerk-react';
 import toast from 'react-hot-toast';
 import api from '../config/axios';
 import { getAllPublicListing } from '../app/features/listingSlice';
+import Footer from '../components/Footer';
 
 const Listingdetails = () => {
   const {user,isLoaded}=useUser();
@@ -74,7 +75,8 @@ const Listingdetails = () => {
 
 
   return listing ? (
-    <div className='mx-auto min-h-screen px-6 md:px-16 lg:px-24 xl:px-40 pt-24 pb-20'>
+    <div className='min-h-screen pt-24 flex flex-col justify-between'>
+      <div className='mx-auto px-6 md:px-16 lg:px-24 xl:px-40 pb-20 flex-1 w-full max-w-7xl'>
       <div className='flex items-center justify-between py-6'>
         <button className='flex items-center gap-2 text-slate-500 hover:text-brand-600 transition'
           onClick={() => navigate(-1)}>
@@ -291,10 +293,8 @@ const Listingdetails = () => {
         </div>
       </div>
 
-      {/* Footer */}
-      <div className='mt-20 pt-10 border-t border-gray-100 text-center'>
-        <p className='text-xs font-bold text-gray-400 uppercase tracking-widest'>&copy; 2026 SocialBazar by Shahid Ansari</p>
       </div>
+      <Footer />
     </div>
   ) : (
     <div className='h-screen flex justify-center items-center'>

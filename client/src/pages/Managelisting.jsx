@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom'
 import api from '../config/axios';
 import { getAllPublicListing, getAllUserListing } from '../app/features/listingSlice';
+import Footer from '../components/Footer';
 
 const Managelisting = () => {
 
@@ -130,8 +131,8 @@ const Managelisting = () => {
   }
 
   return (
-    <div className='min-h-screen pt-28 pb-16 px-4 sm:px-6 lg:px-8'>
-      <div className='max-w-4xl mx-auto'>
+    <div className='min-h-screen pt-28 flex flex-col justify-between'>
+      <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 flex-1 w-full'>
         <div className='mb-8'>
           <h1 className='text-3xl md:text-4xl font-bold text-gray-900'>
             {isEditing ? "Edit listing" : "List your account"}
@@ -224,6 +225,7 @@ const Managelisting = () => {
           </div>
         </form>
       </div>
+      <Footer />
     </div>
   )
 }

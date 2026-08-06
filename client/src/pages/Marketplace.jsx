@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom'
 import ListingCard from '../components/ListingCard';
 import Filterbox from '../components/Filterbox';
+import Footer from '../components/Footer';
 
 const Marketplace = () => {
 
@@ -46,7 +47,8 @@ const Marketplace = () => {
   });
 
   return (
-    <div className='min-h-screen pt-28 px-6 md:px-16 lg:px-24 xl:px-40 pb-20'>
+    <div className='min-h-screen pt-28 flex flex-col justify-between'>
+      <div className='px-6 md:px-16 lg:px-24 xl:px-40 pb-20 flex-1'>
       
       {/* Header Section */}
       <div className='flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8'>
@@ -109,15 +111,8 @@ const Marketplace = () => {
         </div>
       </div>
 
-      {/* Footer Branding */}
-      <div className='mt-32 pt-12 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-6'>
-        <p className='text-xs font-bold text-gray-400 uppercase tracking-widest'>&copy; 2026 SocialBazar Engine Environment</p>
-        <div className='flex gap-8'>
-            <a href="#" className='text-xs font-bold text-gray-400 uppercase tracking-widest hover:text-brand-600 transition'>Terms</a>
-            <a href="#" className='text-xs font-bold text-gray-400 uppercase tracking-widest hover:text-brand-600 transition'>Privacy</a>
-            <a href="#" className='text-xs font-bold text-gray-400 uppercase tracking-widest hover:text-brand-600 transition'>Security</a>
-        </div>
       </div>
+      <Footer />
     </div>
   )
 }

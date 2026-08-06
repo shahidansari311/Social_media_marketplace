@@ -3,6 +3,7 @@ import { useAuth, useUser } from '@clerk/clerk-react';
 import api from '../config/axios';
 import ListingCard from '../components/ListingCard';
 import { Loader2Icon, HeartIcon } from 'lucide-react';
+import Footer from '../components/Footer';
 
 const Wishlist = () => {
     const { isLoaded, user } = useUser();
@@ -39,7 +40,8 @@ const Wishlist = () => {
     }
 
     return (
-        <div className='min-h-screen px-6 md:px-16 lg:px-24 xl:px-32 pt-28 pb-20'>
+        <div className='min-h-screen pt-28 flex flex-col justify-between'>
+            <div className='px-6 md:px-16 lg:px-24 xl:px-32 pb-20 flex-1 w-full max-w-7xl mx-auto'>
             <div className='flex flex-col mb-8'>
                 <h1 className='text-3xl font-bold text-gray-800 flex items-center gap-3'>
                     <HeartIcon className='text-red-500 fill-red-500' /> My Wishlist
@@ -70,6 +72,8 @@ const Wishlist = () => {
                     ))}
                 </div>
             )}
+            </div>
+            <Footer />
         </div>
     );
 };

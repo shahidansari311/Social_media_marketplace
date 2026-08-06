@@ -76,19 +76,23 @@ const Myorders = () => {
 
   if(!orders.length){
     return (
-      <div className='min-h-screen px-4 md:px-16 lg:px-24 xl:px-32 pt-28 pb-20'>
-        <div className='max-w-2xl mx-auto mt-12 bg-white rounded-2xl border border-gray-200 p-10 text-center shadow-sm'>
-          <h3 className='text-xl font-semibold text-gray-900'>No orders yet</h3>
-          <p className='text-sm text-gray-500 mt-2'>
-            You haven't purchased any listings yet.
-          </p>
+      <div className='min-h-screen pt-28 flex flex-col justify-between'>
+        <div className='px-4 md:px-16 lg:px-24 xl:px-32 pb-20 flex-1 w-full max-w-7xl mx-auto'>
+          <div className='max-w-2xl mx-auto mt-12 bg-white rounded-2xl border border-gray-200 p-10 text-center shadow-sm'>
+            <h3 className='text-xl font-semibold text-gray-900'>No orders yet</h3>
+            <p className='text-sm text-gray-500 mt-2'>
+              You haven't purchased any listings yet.
+            </p>
+          </div>
         </div>
+        <Footer />
       </div>
     )
   }
 
   return (
-    <div className='min-h-screen px-4 md:px-16 lg:px-24 xl:px-32 pt-28 pb-20'>
+    <div className='min-h-screen pt-28 flex flex-col justify-between'>
+      <div className='px-4 md:px-16 lg:px-24 xl:px-32 pb-20 flex-1 w-full max-w-7xl mx-auto'>
       <h2 className='text-2xl font-semibold mb-6'>My orders</h2>
 
       <div className='space-y-4'>
@@ -185,6 +189,7 @@ const Myorders = () => {
             </div>
           )
         })}
+      </div>
       </div>
       <Footer />
     </div>

@@ -6,6 +6,7 @@ import { setChat } from '../app/features/chatSlice';
 import { useAuth, useUser } from '@clerk/clerk-react';
 import api from '../config/axios';
 import toast from 'react-hot-toast';
+import Footer from '../components/Footer';
 
 const Messages = () => {
 
@@ -70,8 +71,8 @@ const Messages = () => {
   },[user,isLoaded])
 
   return (
-    <div className='mx-auto min-h-screen px-6 md:px-16 lg:px-24 xl:px-32 pt-28 pb-20'>
-      <div className=''>
+    <div className='min-h-screen pt-28 flex flex-col justify-between'>
+      <div className='mx-auto px-6 md:px-16 lg:px-24 xl:px-32 pb-20 flex-1 w-full max-w-7xl'>
         <div className='mb-8'>
           <h1 className='text-3xl md:text-4xl font-bold text-gray-900 mb-2'>
             Messages
@@ -134,6 +135,7 @@ const Messages = () => {
             </div>
           )}
       </div>
+      <Footer />
     </div>
   )
 }
