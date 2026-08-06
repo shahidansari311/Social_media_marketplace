@@ -7,6 +7,7 @@ import StatsCard from '../components/StatsCard';
 import { platformIcons } from '../assets/assets';
 import Credentialsubmission from '../components/Credentialsubmission';
 import WithdrawlModal from '../components/WithdrawlModal';
+import Footer from '../components/Footer';
 import toast from 'react-hot-toast';
 import api from '../config/axios'
 import { getAllUserListing,getAllPublicListing } from '../app/features/listingSlice';
@@ -119,7 +120,7 @@ const Mylisting = () => {
   }
 
   return (
-    <div className='min-h-screen px-6 md:px-16 lg:px-24 xl:px-32 pt-24 pb-20 bg-slate-50'>
+    <div className='min-h-screen px-6 md:px-16 lg:px-24 xl:px-32 pt-28 pb-20'>
       {/* Header  */}
       <div className='flex flex-col md:flex-row justify-between items-start md:items-center mb-8'>
         <div>
@@ -127,9 +128,9 @@ const Mylisting = () => {
           <p className='text-gray-600 mt-1'>Manage your social media account listings.</p>
         </div>
         <button onClick={()=>navigate('/create-listing')}
-        className='bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded font-medium flex items-center space-x-2 mt-4 md:mt-0'>
+        className='premium-gradient text-white px-6 py-2.5 rounded-2xl font-bold flex items-center space-x-2 mt-4 md:mt-0 shadow-xl shadow-brand-500/20 hover:scale-[1.05] active:scale-95 transition-all'>
           <PlusIcon className='size-4'/>
-          <span > New Listing</span>
+          <span> New Listing</span>
         </button>
       </div>
 
@@ -182,7 +183,7 @@ const Mylisting = () => {
       ):(
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
           {userlistings.map((listing)=>(
-            <div key={listing.id} className='bg-white rounded-lg border border-gray-200 hover:shadow-lg shadow-gray-200/70 transition-shadow'>
+            <div key={listing.id} className='glass-card rounded-3xl card-hover'>
               <div className='p-6'>
                 <div className='flex items-start gap-4 justify-between mb-4'>
                   {platformIcons[listing.platform]}
@@ -287,10 +288,7 @@ const Mylisting = () => {
           <WithdrawlModal onClose={()=>setShowWithdrawl(null)}/>
         )
       }
-      {/* Footer */}
-      <div className='bg-white border-t border-gray-200 p-4 text-center mt-28'>
-        <p className='text-sm text-gray-500'>&copy; 2026 <span>SocialBazar by Shahid Ansari</span>. All rights reserved </p>
-      </div>
+      <Footer />
     </div>
   )
 }

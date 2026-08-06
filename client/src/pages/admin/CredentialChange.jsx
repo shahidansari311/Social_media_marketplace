@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import AdminTitle from '../../components/AdminTitle';
-import { Loader2Icon } from 'lucide-react';
+import { Loader2Icon, Settings2 } from 'lucide-react';
 import CredentialChangeModal from '../../components/CredentialChangeModal';
 import { useAuth } from '@clerk/clerk-react';
 import api from '../../config/axios';
@@ -33,47 +33,58 @@ const CredentialChange = () => {
 
     return loading ? (
         <div className='flex items-center justify-center h-full'>
-            <Loader2Icon className='animate-spin text-indigo-600 size-7' />
+            <div className='flex flex-col items-center gap-3'>
+                <Loader2Icon className='animate-spin text-brand-500 size-8' />
+                <p className='text-sm text-gray-400 font-medium'>Loading credentials...</p>
+            </div>
         </div>
     ) : (
-        <div className='h-full'>
+        <div className='space-y-8 h-full'>
             {listings.length === 0 ? (
-                <div className='flex flex-col items-center justify-center text-center text-gray-600 h-full'>
-                    <h3 className='text-2xl font-bold'>All Credentials Changed</h3>
-                    <p>No listings with unchanged credentials found</p>
+                <div className='flex flex-col items-center justify-center text-center h-full'>
+                    <div className='glass-card rounded-3xl p-12 max-w-md w-full space-y-4'>
+                        <div className='size-16 bg-brand-50 rounded-2xl flex items-center justify-center mx-auto'>
+                            <Settings2 className='size-8 text-brand-500' />
+                        </div>
+                        <h3 className='text-2xl font-black text-gray-900'>All Updated!</h3>
+                        <p className='text-gray-500 font-medium text-sm'>No credentials pending change at this time.</p>
+                    </div>
                 </div>
             ) : (
                 <>
-                    <AdminTitle text1='Change' text2=' Credentials' />
-                    <div className='mt-10 overflow-x-auto bg-white border border-gray-200 w-full max-w-5xl rounded-xl'>
-                        <table className='w-full text-sm text-left  text-gray-700  '>
-                            <thead className='text-xs uppercase border-b border-gray-200'>
-                                <tr>
-                                    <th className='pl-4 py-3'> # </th>
-                                    <th className='px-4 py-3'>Title</th>
-                                    <th className='px-4 py-3'>Niche</th>
-                                    <th className='px-4 py-3'>Platform</th>
-                                    <th className='px-4 py-3'>Username</th>
-                                    <th className='px-4 py-3'>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {listings.map((listing, index) => (
-                                    <tr key={index} className='border-t border-gray-200 hover:bg-indigo-50/50'>
-                                        <td className='pl-4 py-3'>{index + 1}.</td>
-                                        <td className='px-4 py-3'>{listing.title}</td>
-                                        <td className='px-4 py-3'>{listing.niche}</td>
-                                        <td className='px-4 py-3'>{listing.platform}</td>
-                                        <td className='px-4 py-3'>{listing.username}</td>
-                                        <td className='px-4 py-3'>
-                                            <button onClick={() => setShowModal(listing)} className='text-indigo-600 font-medium'>
-                                                change
-                                            </button>
-                                        </td>
+                    <AdminTitle text1='Security' text2='Change Credentials' subtitle={`${listings.length} pending changes`} />
+                    
+                    <div className='bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm'>
+                        <div className='overflow-x-auto'>
+                            <table className='w-full text-sm text-left text-gray-700'>
+                                <thead>
+                                    <tr className='border-b border-gray-100 bg-gray-50/50'>
+                                        <th className='pl-5 py-3.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest'>#</th>
+                                        <th className='px-4 py-3.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest'>Title</th>
+                                        <th className='px-4 py-3.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest'>Platform</th>
+                                        <th className='px-4 py-3.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest'>Niche</th>
+                                        <th className='px-4 py-3.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest'>Username</th>
+                                        <th className='px-4 py-3.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest'>Action</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {listings.map((listing, index) => (
+                                        <tr key={index} className='border-t border-gray-50 hover:bg-brand-50/30 transition-colors'>
+                                            <td className='pl-5 py-3.5 text-gray-400 font-medium'>{index + 1}</td>
+                                            <td className='px-4 py-3.5 font-semibold text-gray-900'>{listing.title}</td>
+                                            <td className='px-4 py-3.5 capitalize'>{listing.platform}</td>
+                                            <td className='px-4 py-3.5 capitalize'>{listing.niche}</td>
+                                            <td className='px-4 py-3.5 text-gray-500'>@{listing.username}</td>
+                                            <td className='px-4 py-3.5'>
+                                                <button onClick={() => setShowModal(listing)} className='text-xs font-bold premium-gradient text-white px-4 py-1.5 rounded-lg hover:opacity-90 transition shadow-sm'>
+                                                    Change
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                         {showModal && (
                             <CredentialChangeModal
                                 listing={showModal}

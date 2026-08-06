@@ -70,7 +70,7 @@ const Messages = () => {
   },[user,isLoaded])
 
   return (
-    <div className='mx-auto min-h-screen px-6 md:px-16 lg:px-24 xl:px-32 pt-24 pb-20 bg-slate-50'>
+    <div className='mx-auto min-h-screen px-6 md:px-16 lg:px-24 xl:px-32 pt-28 pb-20'>
       <div className=''>
         <div className='mb-8'>
           <h1 className='text-3xl md:text-4xl font-bold text-gray-900 mb-2'>

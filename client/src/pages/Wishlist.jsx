@@ -39,7 +39,7 @@ const Wishlist = () => {
     }
 
     return (
-        <div className='min-h-screen px-6 md:px-16 lg:px-24 xl:px-32 pt-24 pb-20 bg-slate-50'>
+        <div className='min-h-screen px-6 md:px-16 lg:px-24 xl:px-32 pt-28 pb-20'>
             <div className='flex flex-col mb-8'>
                 <h1 className='text-3xl font-bold text-gray-800 flex items-center gap-3'>
                     <HeartIcon className='text-red-500 fill-red-500' /> My Wishlist

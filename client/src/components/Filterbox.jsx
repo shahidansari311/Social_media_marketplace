@@ -8,16 +8,36 @@ const Filterbox = ({ phone, setPhone, filters, setFilters }) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [search, setsearch] = useState(searchParams.get("search") || "");
 
+    // Sync input field when URL query param changes from external source
+    React.useEffect(() => {
+        const urlSearch = searchParams.get("search") || "";
+        if (urlSearch !== search) {
+            setsearch(urlSearch);
+        }
+    }, [searchParams]);
+
+    // Debounce updating the URL search query parameter
+    React.useEffect(() => {
+        const delayDebounceFn = setTimeout(() => {
+            const currentSearch = searchParams.get("search") || "";
+            if (search.trim() !== currentSearch) {
+                if (search.trim()) {
+                    setSearchParams({ search: search.trim() });
+                } else {
+                    const newParams = {};
+                    searchParams.forEach((value, key) => {
+                        if (key !== "search") newParams[key] = value;
+                    });
+                    setSearchParams(newParams);
+                }
+            }
+        }, 500);
+
+        return () => clearTimeout(delayDebounceFn);
+    }, [search, setSearchParams, searchParams]);
 
     const onsearchchange = (e) => {
-        if (e.target.value) {
-            setSearchParams({ search: e.target.value });
-            setsearch(e.target.value);
-        }
-        else {
-            navigate('/Marketplace');
-            setsearch("");
-        }
+        setsearch(e.target.value);
     }
 
     const [expanded, setExpanded] = useState({

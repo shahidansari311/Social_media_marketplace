@@ -74,7 +74,7 @@ const Listingdetails = () => {
 
 
   return listing ? (
-    <div className='mx-auto min-h-screen px-6 md:px-16 lg:px-24 xl:px-40 pb-20'>
+    <div className='mx-auto min-h-screen px-6 md:px-16 lg:px-24 xl:px-40 pt-24 pb-20'>
       <div className='flex items-center justify-between py-6'>
         <button className='flex items-center gap-2 text-slate-500 hover:text-brand-600 transition'
           onClick={() => navigate(-1)}>

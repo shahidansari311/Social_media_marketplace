@@ -17,12 +17,20 @@ const Navbar = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    // Close mobile menu on route change
+    useEffect(() => {
+        setMobileOpen(false);
+    }, [location.pathname]);
+
     const navLinks = [
         { name: 'Marketplace', path: '/Marketplace' },
+        { name: 'About', path: '/about-us' },
         { name: 'Listings', path: '/Mylisting', protected: true },
         { name: 'Wishlist', path: '/wishlist', protected: true },
         { name: 'Messages', path: '/Messages', protected: true },
     ];
+
+    const visibleLinks = navLinks.filter(link => !link.protected || user);
 
     const isActive = (path) => location.pathname === path;
 
@@ -45,7 +53,7 @@ const Navbar = () => {
                         <Link to="/" className={`px-5 py-2 rounded-xl text-sm font-bold transition-all ${isActive('/') ? 'bg-white text-brand-600 shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}>
                             Home
                         </Link>
-                        {navLinks.map((link) => (
+                        {visibleLinks.map((link) => (
                             <Link 
                                 key={link.path}
                                 to={link.path} 
@@ -92,7 +100,7 @@ const Navbar = () => {
                 <div className={`md:hidden absolute left-6 right-6 top-[calc(100%+16px)] glass-card rounded-3xl p-6 transition-all duration-500 origin-top ${mobileOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'}`}>
                     <div className='flex flex-col gap-2'>
                         <Link to="/" onClick={() => setMobileOpen(false)} className={`p-4 rounded-2xl text-base font-bold transition ${isActive('/') ? 'bg-brand-50 text-brand-600' : 'text-gray-600'}`}>Home</Link>
-                        {navLinks.map((link) => (
+                        {visibleLinks.map((link) => (
                             <Link 
                                 key={link.path}
                                 to={link.path} 

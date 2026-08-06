@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 import { useAuth, useUser } from '@clerk/clerk-react';
 import api from '../config/axios';
+import Footer from '../components/Footer';
 
 const Myorders = () => {
 
@@ -75,7 +76,7 @@ const Myorders = () => {
 
   if(!orders.length){
     return (
-      <div className='min-h-screen px-4 md:px-16 lg:px-24 xl:px-32 pt-24 pb-20 bg-slate-50'>
+      <div className='min-h-screen px-4 md:px-16 lg:px-24 xl:px-32 pt-28 pb-20'>
         <div className='max-w-2xl mx-auto mt-12 bg-white rounded-2xl border border-gray-200 p-10 text-center shadow-sm'>
           <h3 className='text-xl font-semibold text-gray-900'>No orders yet</h3>
           <p className='text-sm text-gray-500 mt-2'>
@@ -87,7 +88,7 @@ const Myorders = () => {
   }
 
   return (
-    <div className='min-h-screen px-4 md:px-16 lg:px-24 xl:px-32 pt-24 pb-20 bg-slate-50'>
+    <div className='min-h-screen px-4 md:px-16 lg:px-24 xl:px-32 pt-28 pb-20'>
       <h2 className='text-2xl font-semibold mb-6'>My orders</h2>
 
       <div className='space-y-4'>
@@ -99,7 +100,7 @@ const Myorders = () => {
 
 
           return (
-            <div key={id} className=' bg-white rounded-lg border border-gray-200 p-5 flex flex-col max-w-4xl'>
+            <div key={id} className='glass-card rounded-3xl p-5 flex flex-col max-w-4xl card-hover'>
               <div className='flex items-center gap-4 flex-1'>
                 <div className='p-2 rounded-lg bg-gray-50 max-sm:hidden'>
                   {platformIcons[listing.platform]}
@@ -185,6 +186,7 @@ const Myorders = () => {
           )
         })}
       </div>
+      <Footer />
     </div>
   )
 }

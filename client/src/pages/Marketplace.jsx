@@ -46,7 +46,7 @@ const Marketplace = () => {
   });
 
   return (
-    <div className='min-h-screen pt-12 px-6 md:px-16 lg:px-24 xl:px-40 pb-20'>
+    <div className='min-h-screen pt-28 px-6 md:px-16 lg:px-24 xl:px-40 pb-20'>
       
       {/* Header Section */}
       <div className='flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8'>

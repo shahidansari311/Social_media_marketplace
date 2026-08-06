@@ -4,7 +4,7 @@ import Footer from '../components/Footer';
 
 const About = () => {
     return (
-        <div className="min-h-screen pt-20">
+        <div className="min-h-screen pt-28">
             {/* Hero Section */}
             <section className="relative py-20 px-6 md:px-16 lg:px-24 xl:px-40 overflow-hidden">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10">
@@ -44,7 +44,7 @@ const About = () => {
                     <div className="flex-1 relative">
                         <div className="absolute -inset-4 bg-gradient-to-tr from-brand-500/20 to-indigo-500/20 blur-2xl rounded-[3rem] -z-10"></div>
                         <img 
-                            src="/about_page_hero_1772142169524.png" 
+                            src="/about_team.png" 
                             alt="Our Team" 
                             className="w-full rounded-[2.5rem] shadow-2xl border border-white/50 object-cover aspect-[4/3]"
                         />

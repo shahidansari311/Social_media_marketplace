@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
 
 import Home from './pages/Home'
@@ -33,9 +33,29 @@ const App = () => {
   const {user,isLoaded}=useUser();
 
   const dispatch=useDispatch();
-  useEffect(() => {
+
+  const refreshPublicListings = useCallback(() => {
     dispatch(getAllPublicListing());
-  }, []);
+  }, [dispatch]);
+
+  // Fetch on mount
+  useEffect(() => {
+    refreshPublicListings();
+  }, [refreshPublicListings]);
+
+  // Re-fetch when window regains focus (e.g. returning from Stripe payment)
+  useEffect(() => {
+    const handleFocus = () => {
+      refreshPublicListings();
+    };
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, [refreshPublicListings]);
+
+  // Re-fetch when route changes (navigating between pages)
+  useEffect(() => {
+    refreshPublicListings();
+  }, [pathname, refreshPublicListings]);
 
   useEffect(() => {
     if (isLoaded && user) {

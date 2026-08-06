@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Loader2Icon } from 'lucide-react';
+import { Loader2Icon, Inbox } from 'lucide-react';
 import AdminTitle from '../../components/AdminTitle';
 import WithdrawalDetail from '../../components/WithdrawalDetail';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,54 +21,71 @@ const Withdrawal = () => {
     if (loading) {
         return (
             <div className='flex items-center justify-center h-full'>
-                <Loader2Icon className='size-7 text-indigo-500 animate-spin' />
+                <div className='flex flex-col items-center gap-3'>
+                    <Loader2Icon className='animate-spin text-brand-500 size-8' />
+                    <p className='text-sm text-gray-400 font-medium'>Loading withdrawals...</p>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className='h-full'>
-            <AdminTitle text1='All' text2='Withdrawals' />
-            <div className='mt-10 overflow-x-auto bg-white border border-gray-200 w-full max-w-6xl rounded-xl'>
-                <table className='w-full text-sm text-left text-gray-700'>
-                    <thead className='text-xs uppercase border-b border-gray-200 bg-gray-50'>
-                        <tr>
-                            <th className='pl-4 py-3'>#</th>
-                            <th className='px-4 py-3'>User</th>
-                            <th className='px-4 py-3'>Email</th>
-                            <th className='px-4 py-3'>Amount</th>
-                            <th className='px-4 py-3'>Status</th>
-                            <th className='px-4 py-3 text-center'>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {withdrawals?.length === 0 ? (
-                            <tr>
-                                <td colSpan='8' className='text-center py-6 text-gray-500'>
-                                    No withdrawal requests found.
-                                </td>
+        <div className='space-y-8'>
+            <AdminTitle text1='Finance' text2='Withdrawals' subtitle={`${withdrawals?.length || 0} total requests`} />
+            
+            <div className='bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm'>
+                <div className='overflow-x-auto'>
+                    <table className='w-full text-sm text-left text-gray-700'>
+                        <thead>
+                            <tr className='border-b border-gray-100 bg-gray-50/50'>
+                                <th className='pl-5 py-3.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest'>#</th>
+                                <th className='px-4 py-3.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest'>User</th>
+                                <th className='px-4 py-3.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest'>Email</th>
+                                <th className='px-4 py-3.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest'>Amount</th>
+                                <th className='px-4 py-3.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest'>Status</th>
+                                <th className='px-4 py-3.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-center'>Action</th>
                             </tr>
-                        ) : (
-                            withdrawals?.map((req, index) => (
-                                <tr key={req.id} className='border-t border-gray-200 hover:bg-indigo-50/50'>
-                                    <td className='pl-4 py-3'>{index + 1}.</td>
-                                    <td className='px-4 py-3 flex items-center gap-2'>
-                                        <img src={req.user?.image} alt={req.user?.name} className='w-8 h-8 rounded-full' />
-                                        {req.user?.name}
-                                    </td>
-                                    <td className='px-4 py-3'>{req.user?.email}</td>
-                                    <td className='px-4 py-3 font-medium'>{currency}{req.amount.toLocaleString()}</td>
-                                    <td className='px-4 py-3'>{req.isWithdrawn ? <span className='text-green-600 font-medium'>Paid</span> : <span className='text-gray-500 font-medium'>Pending</span>}</td>
-                                    <td className='px-4 py-3 text-center'>
-                                        <button onClick={() => setSelectedRequest(req)} className='text-indigo-600 font-medium hover:underline'>
-                                            Manage
-                                        </button>
+                        </thead>
+                        <tbody>
+                            {withdrawals?.length === 0 ? (
+                                <tr>
+                                    <td colSpan='6' className='text-center py-16'>
+                                        <div className='flex flex-col items-center gap-3'>
+                                            <div className='size-14 bg-gray-50 rounded-2xl flex items-center justify-center'>
+                                                <Inbox className='size-7 text-gray-300' />
+                                            </div>
+                                            <p className='text-sm text-gray-400 font-medium'>No withdrawal requests found</p>
+                                        </div>
                                     </td>
                                 </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
+                            ) : (
+                                withdrawals?.map((req, index) => (
+                                    <tr key={req.id} className='border-t border-gray-50 hover:bg-brand-50/30 transition-colors'>
+                                        <td className='pl-5 py-3.5 text-gray-400 font-medium'>{index + 1}</td>
+                                        <td className='px-4 py-3.5'>
+                                            <div className='flex items-center gap-3'>
+                                                <img src={req.user?.image} alt={req.user?.name} className='size-8 rounded-xl object-cover border border-gray-100' />
+                                                <span className='font-semibold text-gray-900'>{req.user?.name}</span>
+                                            </div>
+                                        </td>
+                                        <td className='px-4 py-3.5 text-gray-500 text-xs'>{req.user?.email}</td>
+                                        <td className='px-4 py-3.5 font-bold text-gray-900'>{currency}{req.amount.toLocaleString()}</td>
+                                        <td className='px-4 py-3.5'>
+                                            <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider border ${req.isWithdrawn ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-amber-50 text-amber-700 border-amber-100'}`}>
+                                                {req.isWithdrawn ? 'Paid' : 'Pending'}
+                                            </span>
+                                        </td>
+                                        <td className='px-4 py-3.5 text-center'>
+                                            <button onClick={() => setSelectedRequest(req)} className='text-xs font-bold text-brand-600 hover:text-brand-700 transition hover:underline'>
+                                                Manage
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
 
                 {selectedRequest && (
                     <WithdrawalDetail
